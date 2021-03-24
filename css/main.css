@@ -1175,7 +1175,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #060866;
+  background: #2bffff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2571,7 +2571,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 body {
-  background: url("https://bing.ioliu.cn/v1/rand");
+  background: url("https://cdn.jsdelivr.net/gh/lihaojieM/cloudimg//wallhaven-j5p23m.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
