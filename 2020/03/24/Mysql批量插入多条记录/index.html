@@ -22,15 +22,19 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Haojie Li&#39;Blog">
-<meta property="og:url" content="http://example.com/archives/2021/index.html">
+  <meta name="description" content="Mysql中一条Insert语句批量插入多条记录…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次Mysql批量插入多条记录">
+<meta property="og:url" content="http://example.com/2020/03/24/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/index.html">
 <meta property="og:site_name" content="Haojie Li&#39;Blog">
+<meta property="og:description" content="Mysql中一条Insert语句批量插入多条记录…">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-03-24T01:46:31.000Z">
+<meta property="article:modified_time" content="2020-05-24T01:46:31.000Z">
 <meta property="article:author" content="Haojie Li">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/archives/2021/">
+<link rel="canonical" href="http://example.com/2020/03/24/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/">
 
 
 <script id="page-configurations">
@@ -38,12 +42,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | Haojie Li'Blog</title>
+  <title>记一次Mysql批量插入多条记录 | Haojie Li'Blog</title>
   
 
 
@@ -151,50 +155,94 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 2 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/03/24/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Haojie Li">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Haojie Li'Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          记一次Mysql批量插入多条记录
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-24 09:46:31" itemprop="dateCreated datePublished" datetime="2020-03-24T09:46:31+08:00">2020-03-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-05-24 09:46:31" itemprop="dateModified" datetime="2020-05-24T09:46:31+08:00">2020-05-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+        <p>Mysql中一条Insert语句批量插入多条记录…</p>
+<span id="more"></span>
+<h4 id="插入语句常用写法"><a href="#插入语句常用写法" class="headerlink" title="插入语句常用写法"></a>插入语句常用写法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO items(name,city,price,number,picture)  VALUES(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式只能够一次插入一条数据，要想插入多条数据，就得多次调用此sql语句，意味着多次与数据库建立连接。但是这样一来，就会增加服务器的负荷，因为，执行每一次SQL服务器都要同样对SQL进行分析、优化等操作。幸好MySQL提供了另一种解决方案，就是使用一条INSERT语句来插入多条记录。这并不是标准的SQL语法，因此只能在MySQL中使用。</p>
+<h4 id="一条INSERT语句插入批量数据的写法"><a href="#一条INSERT语句插入批量数据的写法" class="headerlink" title="一条INSERT语句插入批量数据的写法"></a>一条INSERT语句插入批量数据的写法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">[表名]([列名],[列名]) </span><br><span class="line"> VALUES</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值]));</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，和原来的常规INSERT语句的区别，仅仅是在VALUES 后面增加值的排列，每条记录之间用英文输入法状态下的逗号隔开，是不是so easy。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">items(name,city,price,number,picture) </span><br><span class="line">VALUES</span><br><span class="line">(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;),</span><br><span class="line">(&#39;耐克运动鞋2&#39;,&#39;广州2&#39;,500,1000,&#39;002.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这样，就实现了一次性插入了2条数据。</p>
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>在程序中，插入批量数据时，最好使用这种通过一条INSERT语句来一次性插入的方式。这样可以避免程序和数据库建立多次连接，从而增加服务器负荷。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-03-23T16:53:11+08:00"
-              content="2021-03-23">
-          03-23
-        </time>
-      </div>
+      <footer class="post-footer">
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/03/23/hello-world/" itemprop="url">
-            <span itemprop="name">Hello World</span>
-          </a>
-      </div>
+        
 
-    </header>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/23/hello-world/" rel="next" title="Hello World">
+      Hello World <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
   </article>
-
-
-    </div>
-  </div>
   
   
-  
-
   
 
 
@@ -247,6 +295,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%B8%B8%E7%94%A8%E5%86%99%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">插入语句常用写法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E6%9D%A1INSERT%E8%AF%AD%E5%8F%A5%E6%8F%92%E5%85%A5%E6%89%B9%E9%87%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E5%86%99%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">一条INSERT语句插入批量数据的写法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">建议</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
