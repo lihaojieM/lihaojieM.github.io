@@ -1175,7 +1175,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #fff;
+  background: #daff4e;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2571,7 +2571,7 @@ ul.breadcrumb li + li:last-child {
   }
 }
 body {
-  background: url("https://cdn.jsdelivr.net/gh/lihaojieM/cloudimg//wallhaven-j5p23m.jpg");
+  background: url("https://gitee.com/gitlihaojie/images/raw/master/img/wallhaven-j5p23m.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
