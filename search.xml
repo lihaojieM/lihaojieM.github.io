@@ -1,0 +1,1761 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Think Different</title>
+    <url>/2019/09/20/Think%20Different/</url>
+    <content><![CDATA[<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/greatpeople.jpg"></p>
+<blockquote>
+<p><font color=#C71585>&emsp;&emsp;“Here’s to the crazy ones. The misfits. The rebels. The troublemakers. The round pegs in the square holes. The ones who see things differently. They’re not fond of rules. And they have no respect for the status quo. You can quote them, disagree with them, glorify or vilify them. About the only thing you can’t do is ignore them. Because they change things. They push the human race forward. And while some may see them as the crazy ones, we see genius. Because the people who are crazy enough to think they can change the world are the ones who do.” </p>
+<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;— Apple’s “Think Different” commercial, 1997</font></p>
+</blockquote>
+]]></content>
+      <tags>
+        <tag>Think Different</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【异常】Java异常</title>
+    <url>/2021/02/16/Java%E5%BC%82%E5%B8%B8/</url>
+    <content><![CDATA[<h1 id="Java异常体系结构"><a href="#Java异常体系结构" class="headerlink" title="Java异常体系结构"></a>Java异常体系结构</h1><p><img src="https://img-blog.csdn.net/20160331115514210"></p>
+<h2 id="Throwable"><a href="#Throwable" class="headerlink" title="Throwable"></a>Throwable</h2><p>Throwable类是所有异常和错误的超类，两个直接子类为Error和Exception。</p>
+<p>Throwable包含了其线程创建时线程执行堆栈的快照，它提供了printStackTrace()等接口用于获取堆栈跟踪数据等信息。</p>
+<h2 id="Error"><a href="#Error" class="headerlink" title="Error"></a>Error</h2><p>Error类及其子类，程序中无法处理的错误，表示应用程序中出现了严重的错误。一般是指与虚拟机相关的问题，如<strong>系统崩溃，虚拟机错误，内存空间不总、方法调用栈溢出等。</strong>对于这类错误导致的应用程序中断，仅靠程序本身无法恢复和预防，遇到这样的错误，建议让程序终止。</p>
+<p>它是由JVM产生和抛出的，通常有 Virtual MachineError（虚拟机运行错误）、NoClassDefFoundError（类定义错误）等。 比如 OutOfMemoryError：内存不足错误StackOverflowError：栈溢出错误。此类错误发生时，JVM 将终止线程。</p>
+<h2 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h2><p>Exception是程序本身可以处理的异常，这种异常分两大类：运行时异常和编译时异常。程序中应当尽可能去处理这些异常。</p>
+<h3 id="运行时异常"><a href="#运行时异常" class="headerlink" title="运行时异常"></a>运行时异常</h3><p>RuntimeException类及其子类属于运行时异常，表示在程序运行期间可能会出现的异常。</p>
+<p>比如NullPointerException空指针异常、ArrayIndexOutBoundException数组 下标越界异常ClassCastException类型转换异常、ArithmeticExecption算术异常。</p>
+<p>这些异常是<strong>不受查异常</strong>，程序中可以选择捕获处理，也可以不处理。<strong>这些异常一般是由程序逻辑错误引起的，程序应该从逻辑角度尽可能避免这类异常的发生。</strong></p>
+<p>RuntimeException异常会由Java虚拟机自动抛出并自动捕获。</p>
+<h3 id="编译时异常"><a href="#编译时异常" class="headerlink" title="编译时异常"></a>编译时异常</h3><p>Exception中除了RuntimeException及其子类之外的异常。从程序语法角度讲是必须进行处理的异常。</p>
+<p>Java编译器会检查它。如果程序中出现此类异常，要么通过throws进行声明抛出，要么通过try-catch进行捕获处理，否则不能通过编译。</p>
+<p>如IOException、SQLException等以及用户自定义的Exception异常，一般情况下不自定义检查异常。</p>
+<p><strong>该异常我们必须手动在代码里添加捕获语句来处理该异常。</strong></p>
+<h2 id="受查异常和非受查异常"><a href="#受查异常和非受查异常" class="headerlink" title="受查异常和非受查异常"></a>受查异常和非受查异常</h2><p>Java中所有的异常可以分为受查异常和非受查异常。</p>
+<p><strong>受查异常</strong>：编译器要求必须处理的异常。<strong>除</strong> <strong>RuntimeException</strong> <strong>及其子类外，****其他的</strong> <strong>Exception</strong> <strong>异常都属于受查异常</strong>。</p>
+<p>编译器会检查此类异常，也就是说当编译器检查到应用中的某处可能会此类异常时，将会提示你处理本异常要么使用trycatch捕获，要么使用方法签名中用 throws 关键字抛出，否则编译不通过。</p>
+<p><strong>非受查异常</strong>：编译器不hi进行检查并且不要求必须处理的异常，程序中出现此类异常，即使没有try-catch捕获，也没有使用throws抛出该异常，编译也会正常通过。</p>
+<p><strong>包含运行时异常（RuntimeException及其子类）和错误（Error）</strong></p>
+<h1 id="Java异常关键字"><a href="#Java异常关键字" class="headerlink" title="Java异常关键字"></a>Java异常关键字</h1><ul>
+<li>  try：用于监听。当try语句块内发生异常时，异常就被抛出。</li>
+<li>  catch：用来捕获异常。捕获try语句块中发生的异常。</li>
+<li>  finally：finally语句块总是会被执行。</li>
+<li>  throw：用于抛出异常</li>
+<li>  throws：用来声明该方法可能抛出的异常，用在方法签名上。</li>
+</ul>
+<h1 id="Java异常处理"><a href="#Java异常处理" class="headerlink" title="Java异常处理"></a>Java异常处理</h1><p><img src="https://img-blog.csdnimg.cn/20190316111318681.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3N1Z2FyX25vMQ==,size_16,color_FFFFFF,t_70"></p>
+<h2 id="throws直接抛出异常"><a href="#throws直接抛出异常" class="headerlink" title="throws直接抛出异常"></a>throws直接抛出异常</h2><p>通常，应该捕获那些知道如何处理的异常，将不知道如何处理的异常继续传递下去。传递异常可以在方法签名处使用 throws 关键字声明可能会抛出的异常。</p>
+<pre><code>private static void readFile(String filePath) throws IOException &#123;    File file = new File(filePath);    String result;    BufferedReader reader = new BufferedReader(new FileReader(file));    while((result = reader.readLine())!=null) &#123;        System.out.println(result);    &#125;    reader.close();&#125;
+</code></pre>
+<h2 id="封装异常再抛出"><a href="#封装异常再抛出" class="headerlink" title="封装异常再抛出"></a>封装异常再抛出</h2><p>有时我们会从 catch 中抛出一个异常，目的是为了改变异常的类型。多用于在多系统集成时，当某个子系统故障，异常类型可能有多种，可以用统一的异常类型向外暴露，不需暴露太多内部异常细节。</p>
+<pre><code>private static void readFile(String filePath) throws MyException &#123;        try &#123;        // code    &#125; catch (IOException e) &#123;        MyException ex = new MyException(&quot;read file failed.&quot;);        ex.initCause(e);        throw ex;    &#125;&#125;
+</code></pre>
+<h2 id="try-catch捕获异常"><a href="#try-catch捕获异常" class="headerlink" title="try-catch捕获异常"></a>try-catch捕获异常</h2><p>在一个 <code>try-catch</code>语句块中可以捕获多个异常类型，并对不同类型的异常做出不同的处理。</p>
+<pre><code>private static void readFile(String filePath) &#123;    try &#123;       //可能会发生的异常    &#125; catch (FileNotFoundException e) &#123;        //针对FileNotFoundException异常进行处理    &#125; catch (IOException e)&#123;       //针对IOException进行处理    &#125;&#125;
+</code></pre>
+<h2 id="try-catch-finally"><a href="#try-catch-finally" class="headerlink" title="try-catch-finally"></a>try-catch-finally</h2><p>当方法中发生异常，异常处之后的代码不会再执行，如果之前获取了一些本地资源需要释放，则需要在方法正常结束时和 catch 语句中都调用释放本地资源的代码，显得代码比较繁琐，finally 语句可以解决这个问题。</p>
+<pre><code> public class ExceptionTest &#123;     public static void main(String[] args) &#123;        try &#123;            // 抛出（throw）异常            System.out.println(&quot;执行try语句块，抛出异常&quot;);            throw new Error();        &#125; catch (Exception e) &#123;            System.out.println(&quot;执行catch语句块，已捕捉到Exception异常&quot;);            e.printStackTrace();        &#125; catch (Error e) &#123;            System.out.println(&quot;执行catch语句块，已捕捉到Error错误&quot;);            e.printStackTrace();        &#125; finally &#123;            System.out.println(&quot;执行finally语句块&quot;);        &#125;    &#125;&#125;
+</code></pre>
+<p><strong>注意：</strong></p>
+<blockquote>
+<ul>
+<li>  catch不能独立于 try 存在。</li>
+<li>  catch里面不能没有内容</li>
+<li>  在 try/catch 后面添加 finally 块并非强制性要求的。</li>
+<li>  try 代码后不能既没 catch 块也没 finally 块。</li>
+<li>  try里面越少越好。</li>
+<li>  try, catch, finally 块之间不能添加任何代码。</li>
+<li>  finally里面的代码最终一定会执行（除了JVM退出）</li>
+<li>  如果程序可能存在多个异常，需要多个catch进行捕获。</li>
+<li>  多个catch块时候，最多只会匹配其中一个异常类且只会执行该catch块代码，而不会再执行其它的catch块，且匹配catch语句的顺序为从上到下，也可能所有的catch都没执行。</li>
+</ul>
+</blockquote>
+<p>finally的作用：</p>
+<ul>
+<li>  无论try所指定的程序块中是否抛出异常，也无论catch语句的异常类型是否与所抛弃的异常的类型一致，finally中的代码一定会被执行到。</li>
+<li>  finally语句为异常处理提供一个统一的出口，使得在控制流程转到程序的其他部分之前，能够对程序的状态作统一的管理。</li>
+<li>  通常在finally语句中可以进行资源的清除工作，如关闭打开文件、删除临时文件等。</li>
+</ul>
+<p><strong>finally注意事项</strong></p>
+<p>finally执行的实际是在方法返回之前（try或者catch中如果有return 会在这个return 之前执行finally)。</p>
+<p>但是如果finally中也存在return语句，那么就会执行finally中的return，从而不会执行到try中原有的return。</p>
+<p>一般不建议再finally中写return（会被编译器当作一个警告）</p>
+<h1 id="自定义异常"><a href="#自定义异常" class="headerlink" title="自定义异常"></a>自定义异常</h1><p>自定义异常通常会继承自Exception或者RuntimeException。继承及Exception的默认是受查异常，继承自RuntimeException的异常默认是非受查异常。</p>
+<p>自定义异常应该总是包含如下的构造函数：</p>
+<ul>
+<li><p>  一个无参的构造函数</p>
+</li>
+<li><p>  一个带有String参数的构造函数，并传递给父类的构造函数</p>
+</li>
+<li><p>  一个带有String参数和Throwable参数的构造函数，并都传给父类构造函数</p>
+</li>
+<li><p>一个带有Throwable参数的构造函数，并传递给父类的构造函数</p>
+<p>  //自定义异常类OverdraftExceptionpublic class OverdraftException extends  Exception{    private double deficit;     public double getDeficit() {        return deficit;    }     public OverdraftException() {    }     public OverdraftException(String message, double deficit) {        super(message);        this.deficit = deficit;    }}</p>
+</li>
+</ul>
+<h1 id=""><a href="#" class="headerlink" title=""></a><img src="https://img-blog.csdnimg.cn/20210327175441894.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzU0MDU1,size_16,color_FFFFFF,t_70"></h1><p><img src="https://img-blog.csdnimg.cn/20210327175537562.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NzU0MDU1,size_16,color_FFFFFF,t_70"></p>
+<h1 id="Java异常常见面试题"><a href="#Java异常常见面试题" class="headerlink" title="Java异常常见面试题"></a>Java异常常见面试题</h1><p><strong>error和Exception的区别？</strong></p>
+<ul>
+<li>  Error类和Exception类的父类都是Throwable类。</li>
+<li>  Error 类一般是指与虚拟机相关的问题，如系统崩溃，虚拟机错误，内存空间不足，方法调用栈溢出等。对于这类 错误的导致的应用程序中断，仅靠程序本身无法恢复和和预防，遇到这样的错误，建议让程序终止。</li>
+<li>  Exception 类表示程序可以处理的异常，可以捕获且可能恢复。遇到这类异常，应该尽可能处理异常，使程序恢复 运行，而不应该随意终止异常。</li>
+<li>  Exception 类又分为运行时异常（Runtime Exception）和受检查的异常(Checked Exception )，运行时异常;ArithmaticException,IllegalArgumentException，编译能通过，但是一运行就终止了，程序不会处理运行时异常，出现这类异常，程序会终止。而受检查的异常，要么用 try。。。catch 捕获，要么用 throws 字句声明抛出，交给它 的父类处理，否则编译不会通过。</li>
+</ul>
+<p><strong>throw和throws的区别？</strong></p>
+<p><strong>throw：</strong></p>
+<ul>
+<li>  throw语句用在方法体内，表示抛出异常，由方法体内的语句处理</li>
+<li>  throw是具体向外抛出异常的动作，所以它抛出的是一个异常实例，执行throw一定是抛出了某种异常。</li>
+</ul>
+<p><strong>throws</strong>：</p>
+<ul>
+<li>  throws语句是用在方法声明后面，表示如果抛出异常，由该方法的调用者来进行异常的处理</li>
+<li>  throws主要是声明这个方法会抛出某种类型的异常，让它的使用者要知道需要捕获的异常的类型</li>
+<li>  throws表示出现异常的以后在哪个可能性，并不一定会发生这种异常。</li>
+</ul>
+<p><strong>final、finally、finalize的区别？</strong></p>
+<ul>
+<li>  <strong>final:</strong> 可以修饰类、变量、方法，修饰类表示该类不能被继承、修饰方法表示该方法不能被重写、修饰变量表示该变量是一个常量不能被重新赋值。</li>
+<li>  <strong>finally:</strong> 一般作用在try-catch代码块中，在处理异常的时候，通常将一定要执行的代码放在finally代码块中，表示不管是否出现异常，该代码块都会执行，一般用来存放一些关闭资源的代码。</li>
+<li>  <strong>finalize:</strong> Object类的一个方法，在垃圾回收器执行的时候会调用被回收对象的该方法，可以覆盖此方法提供垃圾收集时的其他资源回收，例如关闭文件等。<strong>该方法更像是一个对象声明周期的临终方法，当该方法被系统调用则代表该对象即将“死亡”。</strong>我们主动行为上调用该方法并不会导致该对象“死亡”，这是一个被动的方法（其实就是回调方法），不需要我们调用。</li>
+</ul>
+<p><strong>常见的RuntimeException有哪些？</strong></p>
+<ul>
+<li><strong>java.lang.NullPointerException 空指针异常</strong>；出现原因：调用了未经初始化的对象或者是不存在的对象。</li>
+<li><strong>java.lang.ClassNotFoundException 指定的类找不到</strong>；出现原因：类的名称和路径加载错误；通常都是程序 试图通过字符串来加载某个类时可能引发异常。</li>
+<li><strong>java.lang.NumberFormatException 字符串转换为数字异常</strong>；出现原因：字符型数据中包含非数字型字符。</li>
+<li><strong>java.lang.IndexOutOfBoundsException</strong> <strong>数组下标越界异常</strong>，常见于操作数组对象时发生。</li>
+<li><strong>java.lang.IllegalArgumentException</strong> 方法传递参数错误。</li>
+<li><strong>java.lang.ClassCastException 数据类型转换异常</strong>。</li>
+<li><strong>java.lang.NoClassDefFoundException 未找到类定义错误</strong>。</li>
+<li><strong>SQLException SQL 异常，常见于操作数据库时的 SQL 语句错误</strong>。</li>
+<li><strong>java.lang.InstantiationException 实例化异常</strong>。</li>
+<li>  <strong>java.lang.NoSuchMethodException 方法不存在异常</strong>。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>Throwable</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Error</tag>
+        <tag>Exception</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【框架】EasyExcel</title>
+    <url>/2021/01/13/EasyExcel/</url>
+    <content><![CDATA[<p>EasyExcel采用一行一行的解析模式，并将一行的解析结果以观察者的模式通知处理（AnalysisEventListener）。</p>
+<p>创建项目SpringBoot项目</p>
+<p>1. 实现EasyExcel对Excel写数据的操作</p>
+<ul>
+<li>  在pom文件中引入依赖</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328171046335.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>创建实体类</li>
+<li><img src="https://img-blog.csdnimg.cn/2021032817102136.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>  实现写的操作</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328170945143.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>  生成Excel数据文档</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328172453921.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+</ul>
+<p>2. 实现EasyExcel对Excel读数据的操作</p>
+<ul>
+<li>  创建实体类</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328171302173.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>监听器 </li>
+<li><img src="https://img-blog.csdnimg.cn/20210328171421899.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>  实现写的操作</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328172150838.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+<li>从Excel读取数据，返回结果</li>
+<li>  <img src="https://img-blog.csdnimg.cn/20210328172301468.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FjaDE1NjM=,size_16,color_FFFFFF,t_70"></li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>Api</category>
+        <category>Excel</category>
+      </categories>
+      <tags>
+        <tag>Excel</tag>
+        <tag>Api</tag>
+        <tag>框架</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【框架】Mybatis映射关系</title>
+    <url>/2021/01/03/mybatis%E5%85%B3%E8%81%94%E6%98%A0%E5%B0%84/</url>
+    <content><![CDATA[<blockquote>
+<p>MyBatis 的真正强大之处在于它的映射语句，这也是它的魔力所在。由于它的映射语句异常强大，映射器的 XML 文件就显得相对简单。</p>
+</blockquote>
+<span id="more"></span>
+<h3 id="一、mybatis-一对一映射关系"><a href="#一、mybatis-一对一映射关系" class="headerlink" title="一、mybatis 一对一映射关系"></a>一、mybatis 一对一映射关系</h3><h4 id="1-一对一映射关系"><a href="#1-一对一映射关系" class="headerlink" title="1.一对一映射关系"></a>1.一对一映射关系</h4><ul>
+<li>  什么是一对一映射关系？：从数据库的角度出发就是在任意一个表中引入另外一个表的主键作为外键。在本类的定义中定义另外一个类的对象。</li>
+<li>  在mybatis中，我们通过resultMap元素的子元素 association来进行处理。</li>
+<li>  association元素具有以下配置属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">属性名称</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">property</td>
+<td align="center">指定映射到的实体类对象属性，与表字段一一对应</td>
+</tr>
+<tr>
+<td align="center">column</td>
+<td align="center">指定表中对应的字段</td>
+</tr>
+<tr>
+<td align="center">select</td>
+<td align="center">指定引入嵌套查询的子SQL 语句，该属性用于关联映射中的嵌套查询。</td>
+</tr>
+<tr>
+<td align="center">javaType</td>
+<td align="center">指定映射到实体对象属性的类型</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>在mybatis中设定了两种查询方式：嵌套查询及嵌套结果查询方式</p>
+<h6 id=""><a href="#" class="headerlink" title=""></a></h6><pre><code>  &lt;!--方式一:嵌套查询--！〉
+  &lt;association property=&quot;card&quot; column=&quot;card_id&quot; javaType=&quot;com.itheima.po.ldCard&quot;
+  select=&quot;com.itheima.mapper.ldCardMapper.findCodeByld&quot; /&gt;
+
+  &lt;!--方式二:嵌套结果--！〉
+  &lt;association property=&quot;card&quot; javaType=&quot;com.itheima.po.ldCard&quot;&gt;
+      &lt;id property=&quot;id&quot; column=&quot;card_id&quot; /&gt;
+      &lt;result property=&quot;code&quot; column=&quot;code&quot; /&gt;
+  &lt;/association&gt;  
+</code></pre>
+</li>
+</ul>
+<h4 id="2-【案例分析】"><a href="#2-【案例分析】" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 个人和身份证之间是一对一的关系，以个人信息和个人身份证一对一关系为例，查询个人信息，通过一对一映射关系来获取对应身份证信息。<br><strong>【分析】：</strong> 根据mybatis框架我们可知，mybatis关系映射语句都是在Mapper.xml中书写的，在mybatis关系映射中，我们需要用到 resuletMap 元素，该元素的用法在上一篇文章中<a href="https://blog.csdn.net/weixin_44989801/article/details/115079755">resultMap映射详解</a>进行过讲解，可自行查阅。StudentMapper.xml 的写法如下</p>
+<h6 id="映射文件代码：StudentMapper-xml"><a href="#映射文件代码：StudentMapper-xml" class="headerlink" title="映射文件代码：StudentMapper.xml"></a>映射文件代码：StudentMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- 3-5行是mybatis约束配置 --&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.StudentMapper&quot;&gt;
+    &lt;!-- 嵌套查询 
+    &lt;select id=&quot;querystudent&quot; parameterType=&quot;int&quot; resultMap=&quot;IdS&quot;&gt;
+        select * from student where id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;resultMap type=&quot;Student&quot; id=&quot;IdS&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;s_name&quot; column=&quot;s_name&quot;/&gt;
+        &lt;result property=&quot;s_age&quot; column=&quot;s_age&quot;/&gt;
+        &lt;result property=&quot;s_sex&quot; column=&quot;s_sex&quot;/&gt;
+        &lt;association property=&quot;card_id&quot; column=&quot;card_id&quot; javaType=&quot;Idcard&quot;
+            select=&quot;org.mybatis.mapper.IdcardMapper.queryinfo&quot;&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+    --&gt;
+    &lt;!--  嵌套结果--&gt;
+    &lt;select id=&quot;querystudent&quot; resultMap=&quot;Ids&quot;&gt;     &lt;!-- select语句的返回值是resultMap类型--&gt;
+        &lt;!-- sql查询语句， 当p.card_id = idcard.id时，获取student表中所有数据和idcard表中的code数据--&gt;
+        select p.*,idcard.code 
+        from student p,idcard idcard
+        where p.card_id = idcard.id
+    &lt;/select&gt;
+        &lt;!-- 一对一映射需要使用resultMap元素封装查询到的信息，id值需要与上文select语句中引用的resultMap=&quot;Ins&quot;值相同---&gt;
+    &lt;resultMap type=&quot;Student&quot; id=&quot;Ids&quot;&gt;
+    &lt;!--映射 Student类中属性与student表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;s_name&quot; column=&quot;s_name&quot;/&gt;
+        &lt;result property=&quot;s_age&quot; column=&quot;s_age&quot;/&gt;
+        &lt;result property=&quot;s_sex&quot; column=&quot;s_sex&quot;/&gt;
+        &lt;!--映射 Idcard类中属性与idcard表的字段一一对应,并将数据放入Student类的属性card_id中--&gt;
+        &lt;association property=&quot;card_id&quot; javaType=&quot;Idcard&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;card_id&quot;/&gt;
+            &lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="二、mybatis-一对多映射关系"><a href="#二、mybatis-一对多映射关系" class="headerlink" title="二、mybatis 一对多映射关系"></a>二、mybatis 一对多映射关系</h3><h4 id="1-一对多映射关系"><a href="#1-一对多映射关系" class="headerlink" title="1.一对多映射关系"></a>1.一对多映射关系</h4><ul>
+<li>什么是一对多关系：一对多关系就是表A中一条数据对应表B中的多条数据，例如，用户和订单之间的关系，一个用户可以有多个订单信息。</li>
+<li>在mybatis中，我们通过resultMap元素的子元素 collection来进行处理。</li>
+<li>collection元素具有以下配置属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">属性名称</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">property</td>
+<td align="center">指定映射到的实体类对象属性，与表字段一一对应</td>
+</tr>
+<tr>
+<td align="center">column</td>
+<td align="center">指定表中对应的字段</td>
+</tr>
+<tr>
+<td align="center">select</td>
+<td align="center">指定引入嵌套查询的子SQL 语句，该属性用于关联映射中的嵌套查询。</td>
+</tr>
+<tr>
+<td align="center">javaType</td>
+<td align="center">指定映射到实体对象属性的类型</td>
+</tr>
+<tr>
+<td align="center">ofType</td>
+<td align="center">ofType 属性与javaType 属性对应，它用于指定实体对象中集合类属性所包含的元素类型。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<ul>
+<li>  需要注意的是：在一对多映射和多对多映射中，collection 元素属行中使用的是ofType属性来指定实体对象，而不是使用JavaType属性。</li>
+</ul>
+</blockquote>
+<h4 id="2-【案例分析】-1"><a href="#2-【案例分析】-1" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 以用户和订单为例，若一个用户有用三个订单，则如何通过查询用户来获取用户对应的订单信息。<br><strong>【分析】：</strong> 一个用户可以有多个订单信息。这就构成了一对多的映射关系。通过mybatis中的一对多映射关系，在mapper.xml文件中写入对应语句后则可完成该需求。</p>
+<h6 id="映射文件代码：OrdersMapper-xml"><a href="#映射文件代码：OrdersMapper-xml" class="headerlink" title="映射文件代码：OrdersMapper.xml"></a>映射文件代码：OrdersMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;!--a.一对多嵌套结果  --&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.UserMapper&quot;&gt;
+    &lt;select id=&quot;queryorders&quot; parameterType=&quot;int&quot; resultMap=&quot;Ins&quot;&gt;        &lt;!-- select语句的返回值是resultMap类型--&gt;
+        &lt;!-- sql查询语句， 当u.id = o.user_id, u.id=&quot;传入值&quot;时，获取user 表中id=&quot;传入值&quot;的数据以及orders 表中的订单数据--&gt;
+        select u.*,o.id as orders_id,o.number
+        from user u,orders o
+        where u.id = o.user_id
+        and u.id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;!-- 一对多映射需要使用resultMap元素封装查询到的信息，且id值需要与上文select语句中引用的resultMap=&quot;Ins&quot;值相同--&gt;
+    &lt;resultMap type=&quot;org.mybatis.beans.User&quot; id=&quot;Ins&quot;&gt;
+        &lt;!--映射 User类中属性与user表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;username&quot; column=&quot;username&quot;/&gt;
+        &lt;result property=&quot;address&quot; column=&quot;address&quot;/&gt;
+          &lt;!--  a.1对多关联映射: collection  
+            ofType 表示属性集合中元素的类型， List&lt;Orders&gt;属性即 Orders 类--&gt;
+        &lt;collection property=&quot;orderList&quot; ofType=&quot;org.mybatis.beans.Orders&quot;&gt;
+        &lt;!--映射 Orders类中属性与orders表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;orders_id&quot;/&gt;
+        &lt;result property=&quot;number&quot; column=&quot;number&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="三、mybatis-多对多映射关系"><a href="#三、mybatis-多对多映射关系" class="headerlink" title="三、mybatis 多对多映射关系"></a>三、mybatis 多对多映射关系</h3><h4 id="1-多对多映射关系"><a href="#1-多对多映射关系" class="headerlink" title="1.多对多映射关系"></a>1.多对多映射关系</h4><ul>
+<li>  <strong>什么是多对多关系：</strong> 一对多关系就是表A中一条数据对应表B中的多条数据，例如，用户和订单之间的关系，一个用户可以有多个订单信息。</li>
+<li>  在mybatis中，与一对多映射一致，我们通过resultMap元素的子元素 collection来进行处理。这里就不再多collection元素属性与上文一致。</li>
+<li><blockquote>
+<ul>
+<li>需要注意的是：在一对多映射和多对多映射中，collection 元素属行中使用的是ofType属性来指定实体对象，而不是使用JavaType属性。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h4 id="2-【案例分析】-2"><a href="#2-【案例分析】-2" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 以订单和商品为例，若一个订单有用三个商品，一个商品有五个不同的订单，则如何通过查询订单来获取对应的商品信息，如何通过查询商品来获取对应的订单信息。<br><strong>【分析】：</strong> 一个商品可以有多个订单信息。一个订单可以有多个商品信息。这就构成了多对多的映射关系。一般来说，<strong>在多对多的映射中，会通过生成中间表的方式来处理</strong>，通过一个中间表保存订单信息和商品信息。但Mapper.xml中的resultMap 元素的写法与一对多基本一致。</p>
+<h6 id="映射文件代码：OrdersMapper-xml-1"><a href="#映射文件代码：OrdersMapper-xml-1" class="headerlink" title="映射文件代码：OrdersMapper.xml"></a>映射文件代码：OrdersMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.OrdersMapper&quot;&gt;
+&lt;!-- 多对多嵌套结果     --&gt;
+    &lt;select id=&quot;queryproduct&quot; parameterType=&quot;int&quot; resultMap=&quot;Ins&quot;&gt;
+        select o.*,p.id as pid,p.name,p.price
+        from orders o,product p,ordersitem oi
+        where oi.orders_id=o.id
+        and oi.product_id=p.id
+        and o.id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;resultMap type=&quot;Orders&quot; id=&quot;Ins&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;number&quot; column=&quot;number&quot;/&gt;
+        &lt;collection property=&quot;productList&quot; ofType=&quot;Product&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;pid&quot;/&gt;
+            &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+            &lt;result property=&quot;price&quot; column=&quot;price&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>框架</category>
+        <category>Mybatis</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+        <tag>数据库</tag>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Java】String 方法汇总</title>
+    <url>/2020/11/15/String%20%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h2 id="length"><a href="#length" class="headerlink" title="length()"></a>length()</h2><p>得到字符串的长度</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.length());</span><br></pre></td></tr></table></figure>
+
+<h2 id="matcher-regex"><a href="#matcher-regex" class="headerlink" title="matcher(regex)"></a>matcher(regex)</h2><p>匹配正则表达式（regex正则表达式）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.matches(<span class="string">&quot;(.*)c&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="compareTo-String-s"><a href="#compareTo-String-s" class="headerlink" title="compareTo(String s)"></a>compareTo(String s)</h2><p>比较两个字符串的大小</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.compareTo(<span class="string">&quot;abcd&quot;</span>));</span><br><span class="line"></span><br><span class="line">System.out.println(str.compareTo(<span class="string">&quot;aba&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="charAt-int-index"><a href="#charAt-int-index" class="headerlink" title="charAt(int index)"></a>charAt(int index)</h2><p>返回字符串下标为index的字符</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.charAt(<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="isBlank"><a href="#isBlank" class="headerlink" title="isBlank()"></a>isBlank()</h2><p>判断字符串是否为空白与空有区别，不可判断null，否则会空指针异常</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot; &quot;</span>.isBlank());</span><br><span class="line">System.out.println(<span class="string">&quot;\n&quot;</span>.isBlank());</span><br><span class="line">System.out.println(<span class="string">&quot;\r&quot;</span>.isBlank());</span><br><span class="line">System.out.println(<span class="string">&quot;?&quot;</span>.isBlank());</span><br></pre></td></tr></table></figure>
+
+<h2 id="isEmpty"><a href="#isEmpty" class="headerlink" title="isEmpty()"></a>isEmpty()</h2><p>判断字符串是否为空，不可判断null，否则会空指针异常</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">System.out.println(<span class="string">&quot;&quot;</span>.isEmpty());</span><br><span class="line">System.out.println(<span class="string">&quot; &quot;</span>.isEmpty());</span><br><span class="line">System.out.println(<span class="string">&quot;\n&quot;</span>.isEmpty());</span><br><span class="line">System.out.println(<span class="string">&quot;\r&quot;</span>.isEmpty());</span><br></pre></td></tr></table></figure>
+
+<h2 id="equals-String-str"><a href="#equals-String-str" class="headerlink" title="equals(String str)"></a>equals(String str)</h2><p>判断两个字符串是否相等，其底层是==，但是其对String比较的时候改为了值比较</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">System.out.println(str.equals(<span class="string">&quot;abc&quot;</span>));</span><br><span class="line">System.out.println(str.equals(s));</span><br><span class="line">System.out.println(str==s);</span><br></pre></td></tr></table></figure>
+
+<h2 id="concat-String-str"><a href="#concat-String-str" class="headerlink" title="concat(String str)"></a>concat(String str)</h2><p>拼接两个字符串</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">String s = <span class="keyword">new</span> String(<span class="string">&quot;abd&quot;</span>);</span><br><span class="line">System.out.println(str.concat(s));</span><br></pre></td></tr></table></figure>
+
+<h2 id="chars"><a href="#chars" class="headerlink" title="chars()"></a>chars()</h2><p>??? 暂时不知道干什么用的，官方解释是返回一个由这个序列中的char值组成的IntStream</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.chars());</span><br></pre></td></tr></table></figure>
+
+<h2 id="codePointAt-int-index"><a href="#codePointAt-int-index" class="headerlink" title="codePointAt(int index)"></a>codePointAt(int index)</h2><p>返回index下标字符的索Unicode码</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.codePointAt(<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="compareToIgnore-String-str"><a href="#compareToIgnore-String-str" class="headerlink" title="compareToIgnore(String str)"></a>compareToIgnore(String str)</h2><p>按字典序比较两个字符串，不考虑大小写</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">String s = <span class="string">&quot;ABC&quot;</span>;</span><br><span class="line">System.out.println(str.compareToIgnoreCase(s));</span><br><span class="line">System.out.println(str.compareTo(s));</span><br></pre></td></tr></table></figure>
+
+<h2 id="contains-CharSequence-s"><a href="#contains-CharSequence-s" class="headerlink" title="contains(CharSequence s)"></a>contains(CharSequence s)</h2><p>判断字符串是否包含了s</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.contains(<span class="string">&quot;ab&quot;</span>));</span><br><span class="line">System.out.println(str.contains(<span class="string">&quot;d&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="contentEquals-CharSequence-cs"><a href="#contentEquals-CharSequence-cs" class="headerlink" title="contentEquals(CharSequence cs)"></a>contentEquals(CharSequence cs)</h2><p>判断字符串内容是否相等</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">StringBuffer s = <span class="keyword">new</span> StringBuffer(<span class="string">&quot;abc&quot;</span>);</span><br><span class="line">System.out.println(str.contentEquals(s));</span><br><span class="line">System.out.println(str.equals(s));</span><br></pre></td></tr></table></figure>
+
+<h2 id="endWith-String-suffix"><a href="#endWith-String-suffix" class="headerlink" title="endWith(String suffix)"></a>endWith(String suffix)</h2><p>判断一个字符串是否以suffix结尾</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.endsWith(<span class="string">&quot;c&quot;</span>));</span><br><span class="line">System.out.println(str.endsWith(<span class="string">&quot;a&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="startsWith-String-prefix-int-toffset"><a href="#startsWith-String-prefix-int-toffset" class="headerlink" title="startsWith(String prefix,int toffset)"></a>startsWith(String prefix,int toffset)</h2><p>判断一个字符串是否以prefix开始</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.startsWith(<span class="string">&quot;c&quot;</span>));</span><br><span class="line">System.out.println(str.startsWith(<span class="string">&quot;a&quot;</span>));</span><br><span class="line"></span><br><span class="line">System.out.println(str.startsWith(<span class="string">&quot;c&quot;</span>,<span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="getBytes"><a href="#getBytes" class="headerlink" title="getBytes()"></a>getBytes()</h2><p>返回一个byte数组，使用平台的默认字符集将字符串编码为 byte 序列 可选参数CharSet charset,String charsetName,使用指定的字符集将字符串编码为byte序列</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"><span class="keyword">byte</span>[] b = str.getBytes();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; b.length; i++) &#123;</span><br><span class="line">    System.out.print(b[i]);</span><br><span class="line">&#125;</span><br><span class="line">System.out.print(b)</span><br><span class="line">System.out.println(str.getBytes(<span class="string">&quot;UTF-8&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode()"></a>hashCode()</h2><p>获取当前字符串的hash值</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.hashCode());</span><br></pre></td></tr></table></figure>
+
+<h2 id="indexOf-char-ch"><a href="#indexOf-char-ch" class="headerlink" title="indexOf(char ch)"></a>indexOf(char ch)</h2><p>返回字符串中首次出现ch的下标</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.indexOf(<span class="string">&#x27;c&#x27;</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="number">98</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="string">&quot;bc&quot;</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="number">99</span>,<span class="number">1</span>));</span><br><span class="line">System.out.println(str.indexOf(<span class="string">&#x27;c&#x27;</span>,<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="lastIndexOf"><a href="#lastIndexOf" class="headerlink" title="lastIndexOf()"></a>lastIndexOf()</h2><p>返回字符串中最后一次出现ch的下标</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.lastIndexOf(<span class="string">&#x27;c&#x27;</span>));</span><br><span class="line">System.out.println(str.lastIndexOf(<span class="number">98</span>));</span><br><span class="line">System.out.println(str.lastIndexOf(<span class="string">&quot;bc&quot;</span>));</span><br><span class="line">System.out.println(str.lastIndexOf(<span class="number">99</span>,<span class="number">1</span>));</span><br><span class="line">System.out.println(str.lastIndexOf(<span class="string">&#x27;c&#x27;</span>,<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="intern"><a href="#intern" class="headerlink" title="intern()"></a>intern()</h2><p>intern() 方法返回字符串对象的规范化表示形式</p>
+<p>在调用”ab”.intern()方法的时候会返回”ab”，但是这个方法会首先检查字符串池中是否有”ab”这个字符串，如果存在则返回这个字符串的引用，否则就将这个字符串添加到字符串池中，然会返回这个字符串的引用</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str1 = <span class="string">&quot;a&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;b&quot;</span>;</span><br><span class="line">String str3 = <span class="string">&quot;ab&quot;</span>;</span><br><span class="line">String str4 = str1 + str2;</span><br><span class="line">String str5 = <span class="string">&quot;a&quot;</span> + <span class="string">&quot;b&quot;</span>;</span><br><span class="line">String str6 = <span class="keyword">new</span> String(<span class="string">&quot;ab&quot;</span>);</span><br><span class="line"></span><br><span class="line">System.out.println(str6.equals(str3));</span><br><span class="line">System.out.println(str6 == str3);</span><br><span class="line">System.out.println(str6.intern() == str3);</span><br><span class="line">System.out.println(str6.intern() == str4);</span><br><span class="line">System.out.println(str6.intern() == str5);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="lines"><a href="#lines" class="headerlink" title="lines()"></a>lines()</h2><p>通过其行终止符分隔字符串，并返回由这些行终止符分隔的字符串流</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="offsetByCodePoints-int-index-int-codePointOffset"><a href="#offsetByCodePoints-int-index-int-codePointOffset" class="headerlink" title="offsetByCodePoints(int index , int codePointOffset)"></a>offsetByCodePoints(int index , int codePointOffset)</h2><p>返回此 String 中从给定的 index 处偏移 codePointOffset 个代码点的索引</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.offsetByCodePoints(<span class="number">1</span>,<span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="regionMatches-int-toffset-String-other-int-ooffset-int-len"><a href="#regionMatches-int-toffset-String-other-int-ooffset-int-len" class="headerlink" title="regionMatches(int toffset, String other,int ooffset,int len)"></a>regionMatches(int toffset, String other,int ooffset,int len)</h2><p>用于检测两个字符串在一个区域内是否相等</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">String str1 = <span class="string">&quot;cvefg&quot;</span>;</span><br><span class="line">System.out.println(str.regionMatches(<span class="number">4</span>,str1,<span class="number">2</span>,<span class="number">3</span>));</span><br><span class="line"></span><br><span class="line">str1 = <span class="string">&quot;CVEFG&quot;</span></span><br><span class="line">System.out.println(str.regionMatches(<span class="keyword">true</span>,<span class="number">4</span>,str1,<span class="number">2</span>,<span class="number">3</span>));</span><br><span class="line">System.out.println(str.regionMatches(<span class="keyword">false</span>,<span class="number">4</span>,str1,<span class="number">2</span>,<span class="number">3</span>))</span><br></pre></td></tr></table></figure>
+
+<h2 id="repeat-int-count"><a href="#repeat-int-count" class="headerlink" title="repeat(int count)"></a>repeat(int count)</h2><p>返回一个字符串重复count次</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.repeat(<span class="number">2</span>));</span><br><span class="line">System.out.println(str.repeat(<span class="string">&quot;2&quot;</span>));</span><br><span class="line">System.out.println(str.repeat(<span class="number">0.9</span>));</span><br><span class="line">System.out.println(str.repeat(NaN));</span><br><span class="line">System.out.println(str.repeat(-<span class="number">0.9</span>));</span><br><span class="line">System.out.println(str.repeat(-<span class="number">1</span>));</span><br><span class="line">System.out.println(str.repeat(Infinity));</span><br></pre></td></tr></table></figure>
+
+<h2 id="replace-char-oldChar-char-newChar"><a href="#replace-char-oldChar-char-newChar" class="headerlink" title="replace(char oldChar, char newChar)"></a>replace(char oldChar, char newChar)</h2><p>使用newChar替换字符串中的所有oldChar字符</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abcabc123&quot;</span>;</span><br><span class="line">System.out.println(str.replace(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;e&quot;</span>));</span><br><span class="line"></span><br><span class="line">replaceAll(String regex, String replacement)</span><br><span class="line">String regex = <span class="string">&quot;\\d+&quot;</span>;</span><br><span class="line">System.out.println(str.replace(regex,<span class="string">&quot;z&quot;</span>));</span><br><span class="line">replaceFirst(String regex, String replacement)</span><br><span class="line">System.out.println(str.replaceFirst(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;d&quot;</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="split-String-regex，int-limit"><a href="#split-String-regex，int-limit" class="headerlink" title="split(String regex，int limit)"></a>split(String regex，int limit)</h2><p>以regex为分隔符分割字符串，返回一个String数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(Arrays.toString(str.split(<span class="string">&quot;&quot;</span>)));</span><br><span class="line">System.out.println(Arrays.toString(str.split(<span class="string">&quot;&quot;</span>,<span class="number">2</span>)));</span><br></pre></td></tr></table></figure>
+
+<h2 id="trim"><a href="#trim" class="headerlink" title="trim()"></a>trim()</h2><p>返回一个字符串，移除字符串首尾的空白字符（空格、\t、\n）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot; abc &quot;</span>;</span><br><span class="line">System.out.println(str.trim());</span><br></pre></td></tr></table></figure>
+
+<h2 id="strip"><a href="#strip" class="headerlink" title="strip()"></a>strip()</h2><p>返回一个字符串，移除字符串首尾的空白字符（空格、\t、\n）</p>
+<p><strong>trim</strong> ()和 <strong>strip</strong> ()功能类似，主要 区别 是: <strong>trim</strong> ()可以去除字符串前后的半角空白字符 <strong>strip</strong> ()可以去除字符串前后的全角和半角空白字符 半角和全角 半角是我们多数人在打字的时候使用的状态，如果我们不去刻意调整半全角，它会一直伴随着我们，因为半角状态下，人们已经习惯了这种打字模式，半角状态下可以使用任何标点符号，而且对于空格也没有特殊限制。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.strip());</span><br></pre></td></tr></table></figure>
+
+<h2 id="substring-int-beginIndex-int-endIndex"><a href="#substring-int-beginIndex-int-endIndex" class="headerlink" title="substring(int beginIndex, int endIndex)"></a>substring(int beginIndex, int endIndex)</h2><p>截取从beginIndex到endIndex区间的字符串（不包括endIndex）</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abcdefg&quot;</span>;</span><br><span class="line">System.out.println(str.substring(<span class="number">2</span>,<span class="number">4</span>));</span><br><span class="line">System.out.println(str.substring(<span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+
+<h2 id="toCharArray"><a href="#toCharArray" class="headerlink" title="toCharArray()"></a>toCharArray()</h2><p>返回一个char数组，将字符串转换为char数组</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.toCharArray());</span><br></pre></td></tr></table></figure>
+
+<h2 id="toLowerCase"><a href="#toLowerCase" class="headerlink" title="toLowerCase()"></a>toLowerCase()</h2><p>转换为小写字母</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;ABC&quot;</span>;</span><br><span class="line">System.out.println(str.toLowerCase());</span><br></pre></td></tr></table></figure>
+
+<h2 id="toUpperCase"><a href="#toUpperCase" class="headerlink" title="toUpperCase()"></a>toUpperCase()</h2><p>转换为大写字母</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String str = <span class="string">&quot;abc&quot;</span>;</span><br><span class="line">System.out.println(str.toLowerCase());</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>框架</category>
+      </categories>
+      <tags>
+        <tag>Api</tag>
+        <tag>Java</tag>
+        <tag>String</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【工具】常用工具&amp;网站收录</title>
+    <url>/2020/10/16/%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7%E7%BD%91%E7%AB%99%E6%94%B6%E5%BD%95/</url>
+    <content><![CDATA[<blockquote>
+<p>本篇收录一些开发或生活中会用到的工具网站，以备不时之需。 </p>
+</blockquote>
+<span id="more"></span>
+
+<p>&emsp;&emsp;Emoji小表情网站（非图片可复制）：<a href="http://www.fhdq.net/emoji/emojifuhao.html">点击直达</a></p>
+<p>&emsp;&emsp;ProcessOn（在线作图工具）：<a href="https://www.processon.com/">点击直达</a></p>
+<p>&emsp;&emsp;在线工具（开发常用 非常全面的工具网站）：<a href="https://tool.lu/">点击直达</a></p>
+<p>&emsp;&emsp;ToolFk（开发常用 在线工具箱）：<a href="https://www.toolfk.com/">点击直达</a></p>
+<p>&emsp;&emsp;字符画生成（文本转字符画）：<a href="http://patorjk.com/software/taag/#p=display&f=Graffiti&t=Type%20Something%20">点击直达</a></p>
+]]></content>
+      <categories>
+        <category>工具收录</category>
+      </categories>
+      <tags>
+        <tag>工具</tag>
+        <tag>网站</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【框架】Spring Boot多环境切换</title>
+    <url>/2020/09/07/SpringBoot%E5%A4%9A%E7%8E%AF%E5%A2%83%E5%88%87%E6%8D%A2/</url>
+    <content><![CDATA[<h2 id="官方文档介绍"><a href="#官方文档介绍" class="headerlink" title="官方文档介绍"></a>官方文档介绍</h2><p><a href="https://docs.spring.io/spring-boot/docs/2.4.3/reference/htmlsingle/#boot-features-external-config">https://docs.spring.io/spring-boot/docs/2.4.3/reference/htmlsingle/#boot-features-external-config</a><br><img src="https://img-blog.csdnimg.cn/20210315225245430.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"></p>
+<h2 id="配置文件加载位置"><a href="#配置文件加载位置" class="headerlink" title="; 配置文件加载位置"></a><a name="_4">;</a> 配置文件加载位置</h2><p><strong>springboot 启动会扫描以下位置的application.properties或者application.yml文件作为Spring boot的默认配置文件</strong></p>
+<ol>
+<li>优先级1：项目路径下的config文件夹下面的直接子文件夹下的配置文件</li>
+<li>优先级2：项目路径的config文件夹配置文件</li>
+<li>优先级3：项目路径下配置文件</li>
+<li>优先级4：资源路径下的config文件夹配置文件</li>
+<li>优先级5：资源路径下配置文件</li>
+</ol>
+<p><strong>优先级由高到底，高优先级的配置会覆盖底优先级的配置</strong></p>
+<p>现在分别在：</p>
+<ol>
+<li>./config/test/application.yaml</li>
+<li>./config/application.yaml</li>
+<li>./application.yaml</li>
+<li>classpath:config/test/application.yaml(即resources路径下)</li>
+<li>classpath:application.yaml</li>
+</ol>
+<p>分别配置Tomcat的端口号为8081,8082,8083,8084,8085</p>
+<p><img src="https://img-blog.csdnimg.cn/20210315231724883.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br>结果：<br><img src="https://img-blog.csdnimg.cn/20210315232053556.png"></p>
+<p>当删除./config/test/application.yaml配置文件时。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210315232138716.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br>当删除./config/application.yaml配置文件时。<br><img src="https://img-blog.csdnimg.cn/20210315232218257.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br>当删除./application.yaml配置文件时<br><img src="https://img-blog.csdnimg.cn/20210315232314704.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br>当删除classpath:config/test/application.yaml(即resources路径下)配置文件时<br><img src="https://img-blog.csdnimg.cn/20210315232358376.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"></p>
+<h2 id="多配置文件"><a href="#多配置文件" class="headerlink" title="多配置文件"></a>多配置文件</h2><p><strong>在主配置文件编写的时候，文件名可以是 application-{profile}.properties/yml , 用来指定多个环境版本</strong></p>
+<p>方式一：application-{profile}.properties</p>
+<p>例如：<br><strong>application-test.properties 代表测试环境配置</strong><br><strong>application-dev.properties 代表开发环境配置</strong></p>
+<p>但是Springboot并不会直接启动这些配置文件，它 <strong>默认使用application.properties主配置文件</strong>，如果想使用其他环境的配置，需要通过一个配置来选择需要激活的环境</p>
+<p><img src="https://img-blog.csdnimg.cn/20210315232805934.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20210315232812906.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br><img src="https://img-blog.csdnimg.cn/20210315232818423.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br>结果：<br><img src="https://img-blog.csdnimg.cn/20210315232835741.png"></p>
+<p>当选择需要激活的环境时：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="string">spring.profiles.active=dev</span></span><br></pre></td></tr></table></figure>
+
+<p>结果：<br><img src="https://img-blog.csdnimg.cn/20210315233114283.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80NTYwODE2NQ==,size_16,color_FFFFFF,t_70"><br><strong>yaml的多文档块</strong></p>
+<p>方式二：使用yaml实现多文档块配置，不需要创建多个配置文件，更加方便</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8081</span></span><br><span class="line"></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span></span><br><span class="line">    <span class="attr">active:</span> <span class="string">test</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8082</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">dev</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"></span><br><span class="line"><span class="attr">server:</span></span><br><span class="line">  <span class="attr">port:</span> <span class="number">8083</span></span><br><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">profiles:</span> <span class="string">test</span></span><br></pre></td></tr></table></figure>
+
+<p>结果：<br><img src="https://img-blog.csdnimg.cn/20210315233734162.png"></p>
+<p>当然使用yaml配置文件也可以不使用多文档块，分开写多个yaml配置文件也是一样的效果</p>
+<p><strong>注意：如果yml和properties同时都配置了端口，并且没有激活其他环境 ， 默认会使用properties配置文件的！</strong></p>
+<p>运维小技巧：<br>指定位置加载配置文件：<br>可以通过spring.config.location来改变默认的配置文件位置，项目打包好以后，我们可以使用命令行参数的形式，启动项目的时候来指定配置文件的新位置；这种情况，一般是后期运维做的多，相同配置，外部指定的配置文件优先级最高</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">java -jar (项目工程名字).jar --spring.config.location =[classpath：/(默认).properties]或者classpath：/(有选择).properties</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>框架</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+        <tag>Spring</tag>
+        <tag>Spring Boot</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【问题】Bug定位套路，遇见bug再也不慌</title>
+    <url>/2020/08/23/bug%E5%AE%9A%E4%BD%8D%E5%A5%97%E8%B7%AF%EF%BC%8C%E9%81%87%E8%A7%81bug%E5%86%8D%E4%B9%9F%E4%B8%8D%E6%85%8C/</url>
+    <content><![CDATA[<h1 id="一、日志定位法"><a href="#一、日志定位法" class="headerlink" title="一、日志定位法"></a>一、日志定位法</h1><p>基本上大部分的bug异常问题，只要能找到相关的异常日志，那么就不用太慌了，<strong>根据提示的异常类型和出现位置，很容易就定位出异常原因。</strong><br>可以说，日志是日常工作中定位bug，修复异常问题的首要依据。</p>
+<p>有人可能说，那要是没有异常提示呢？<br>大部分情况下，可能和日志的输出级别有关。很多时候适当的降低日志级别，会输出更多程序运行的相关信息，给我们的bug修复提供更多的依据。</p>
+<p>但要注意，生产环境上要控制好日志的输出级别，如果日志级别过低，可能会导致日志文件增长过快，对服务器的磁盘IO和存储空间造成较大的压力。<br>在spring boot中我们可以利用actuator组件实现日志级别的动态调整。</p>
+<h1 id="二、断点调试法"><a href="#二、断点调试法" class="headerlink" title="二、断点调试法"></a>二、断点调试法</h1><p>在开发过程中，遇到程序出现异常或执行效果不符的情况，有时可能只是代码逻辑的一些问题，并不会抛出异常，也就没有了相关的日志输出。这种情况下，最适合的就是在对应的方法打上断点，开启debug模式启动项目，逐步调试分析程序的执行步骤和数据变化的情况。</p>
+<p>程序员老鸟都知道，能断点调试的bug，都不叫什么bug。</p>
+<p><strong>断点调试又分为2种情况：</strong><br>1、本地断点调试<br>2、远程断点调试</p>
+<p>很明显，本地断点调试是我们日常开发过程中用的最多的，在idea中给程序打上断点，然后通过debug模式启动项目，调用对应的方法，进入断点后通过F7和F8逐步调试。适用于本地开发环境。</p>
+<p>而远程断点调试则是通过和远程运行的程序建立websocket连接来进行断点调试，本地的项目不用启动。适用于测试环境和生产环境。</p>
+<h1 id="三、google、百度大法"><a href="#三、google、百度大法" class="headerlink" title="三、google、百度大法"></a>三、google、百度大法</h1><p>程序员圈子里有很多有趣的鄙视链，比如搞C的看不起搞java，搞java的看不起搞php的。<br>这里也说一条，用google的瞧不起用百度的。</p>
+<p>但是我想说，年轻人才做选择，作为程序员老鸟，我都用。一般来说，百度更适合中国人的口味，搜索出的内容量也会比较多，但是过滤出高质量符合自己的场景的文章有时候比较费事。<br>google的话，感觉搜索结果中的文章质量会高很多，特别是针对国外的一些网站。</p>
+<p>当遇到一个看不懂的异常时，将那一大串不明觉厉的异常日志直接扔到google，百度里，立刻搜出来各种大牛的处理问题的相关博文，这酸爽，大家都懂的。</p>
+<p>当然，最关键的是搜索的关键字，这取决于你对bug现象的描述，越言简意赅搜索到的信息反而越多。</p>
+<h1 id="四、stackoverflow大法"><a href="#四、stackoverflow大法" class="headerlink" title="四、stackoverflow大法"></a>四、stackoverflow大法</h1><p>如果你从事编程多年，还不知道stackoverflow这个牛逼的网站，我只能说你可能是个假程序员。<br>在这个网站里，你基本上可以找到你开发过程中遇到的所有bug。</p>
+<p>如果找不到，你还可以在里面发起提问，会有很多大神给你提供思路和答疑，当然前提是你的英语还不错。</p>
+<h1 id="五、问题复现法"><a href="#五、问题复现法" class="headerlink" title="五、问题复现法"></a>五、问题复现法</h1><p>一般本地开发环境的异常问题都比较容易复现，比较困难的是测试环境，生产环境的异常问题。<br>比如网络问题导致的请求失败，服务器配置问题导致请求被拒绝，数据结构和数据记录不一致导致的异常，GC异常，偶然性或周期性出现的异常等等。</p>
+<p>总的来说，就是开发环境和测试、生产环境的环境不一致导致问题很难复现。</p>
+<p>1、尽可能减少程序运行环境之间的差异<br>2 、扩大日志记录的时间，记录多个异常周期内的日志<br>3、记录请求的入参出参<br>4、本地模拟环境重线异常问题</p>
+<p>当你本地能复现问题后，就可以随便整了，可以采用各种手段尝试解决问题。成功后将解决方案照搬到生产环境就可以了。</p>
+<h1 id="六、排除法"><a href="#六、排除法" class="headerlink" title="六、排除法"></a>六、排除法</h1><p>很多异常很可能可以由多种原因引发，这时候你就需要采用排除法，针对每一个可能的原因去尝试。<br>还有的时候，针对一些中间件，组件参数的优化，也可以采用排除法。</p>
+<p>在你对异常情况没有情绪定位的时候，可以采用排除法，尽可能的缩小异常查找的范围，进而定位问题。</p>
+<h1 id="七、同类比较法"><a href="#七、同类比较法" class="headerlink" title="七、同类比较法"></a>七、同类比较法</h1><p>这个也是我在开发过程中常用的一种异常定位办法。<br>典型的场景是，明明是相同或者类似的一个功能模块，A模块里面能正常运行，B模块里面缺一直出现问题。<br>这时候比较笨的办法就是仔细比较2个模块里面这个功能实现有那些查询，做一些对应的调整。</p>
+<p>程序员不能光会Ctrl+C 和 Ctrl+ V，你可能需要更多的思考。</p>
+<h1 id="八、官方文档法"><a href="#八、官方文档法" class="headerlink" title="八、官方文档法"></a>八、官方文档法</h1><p>一般来说，官方文档是一个技术或框架的最准确的说明文档，是我们程序开发过程中最直接、最正确的首要依据。</p>
+<p>很多时候在网上找的博客文章，往往由于没有说明问题的上下文环境，中间件或组件的版本不一致，导致对自己的问题定位没有什么指导价值。</p>
+<p>这时候，通过官方文档你可以获取最正确的第一手资料，是帮助我们定位异常的重要依据。</p>
+<p>查看官方文档的时候，一定要选择和自己项目中一致的版本号。</p>
+<h1 id="九、源码分析法"><a href="#九、源码分析法" class="headerlink" title="九、源码分析法"></a>九、源码分析法</h1><p>真正的大神，定位问题的手段往往都朴实无华。</p>
+<p>各种问题都能够直接怼源码，通过手撕源码，达到“他自狠来他自恶 我自一口真气足”的大神境界。</p>
+<p>任你异常变化万千，通过跟踪源码，直指问题核心，定位异常原因。</p>
+<p>阅读源码这招威力虽然强大，但是对使用者的“内功”会有较高的要求，非3，5年内功不可轻易修炼，使用者需要量力而行。</p>
+<h1 id="十、大神求教法"><a href="#十、大神求教法" class="headerlink" title="十、大神求教法"></a>十、大神求教法</h1><p>开发过程中，bug万千，作为一个新入职场的小菜鸟，阅历尚浅，内功不够，遇到bug后，首先还是要自己多思多想，尽力尝试分析原因，独自解决问题。</p>
+<p>每解决一个bug就是自己程序人生的一次成长的机会，所以不要轻易放过。</p>
+<p>当尝试无果后，需要梳理好问题的上下文以及前因后果，然后施展终极大招——大神求教法。这里的大神可以是团队里的老人，可以是技术社区的大佬，可以是技术群里的高人。</p>
+<p>得到大佬指点后重新尝试，解决问题后，需要做好相关的异常解决笔记，日积月累之下，自然也成为了同事眼中的大神。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>调试</category>
+      </categories>
+      <tags>
+        <tag>Bug</tag>
+        <tag>调试</tag>
+        <tag>问题</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Java】单例模式：饿汉式、懒汉式</title>
+    <url>/2020/06/30/java%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%EF%BC%9A%E9%A5%BF%E6%B1%89%E5%BC%8F%E3%80%81%E6%87%92%E6%B1%89%E5%BC%8F/</url>
+    <content><![CDATA[<h1 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h1><p>概念：</p>
+<blockquote>
+<p><strong>某个类在整个系统中只能有一个实例对象可以被获取和使用。</strong></p>
+</blockquote>
+<p>实现要点：</p>
+<ol>
+<li><strong>构造器私有</strong></li>
+<li><strong>含有一个该类的静态变量来保存这个唯一的实例</strong></li>
+<li><strong>对外提供获取该实例对象的方式</strong></li>
+</ol>
+<p>单例模式分为饿汉式和懒汉式。</p>
+<h3 id="1-饿汉式"><a href="#1-饿汉式" class="headerlink" title="1. 饿汉式"></a>1. <strong>饿汉式</strong></h3><blockquote>
+<p><strong>直接创建对象，不存在线程安全问题。</strong></p>
+</blockquote>
+<h4 id="静态常量方式"><a href="#静态常量方式" class="headerlink" title="静态常量方式"></a><strong>静态常量方式</strong></h4><ul>
+<li>优点：这种写法比较简单，就是 <strong>在类加载的时候就完成实例化。避免了线程同步问题。</strong></li>
+<li>缺点：在类加载的时候就完成实例化，没有达到Lazy Loading的效果。如果从未使用过这个实例，则会 <strong>造成内存的浪费</strong>。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> SingleTon singleTon = <span class="keyword">new</span> SingleTon();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> SingleTon singleTon = <span class="keyword">new</span> SingleTon();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getSingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">return</span> singleTon;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="静态代码块方式"><a href="#静态代码块方式" class="headerlink" title="静态代码块方式"></a><strong>静态代码块方式</strong></h4><ul>
+<li>将类实例化的过程放在了静态代码块中，也是在类加载的时候，就执行静态代码块中的代码，初始化类的实例。</li>
+<li>优缺点和上面的方式是一样的。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleTon singleTon;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        singleTon = <span class="keyword">new</span> SingleTon();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getSingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> singleTon;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="枚举形式"><a href="#枚举形式" class="headerlink" title="枚举形式"></a><strong>枚举形式</strong></h4><ol>
+<li>借助JDK1.5中添加的枚举来实现单例模式。不仅能避免多线程同步问题，而<br>且还能防止反序列化重新创建新的对象。</li>
+<li>这种方式是Effective Java作者Josh Bloch 提倡的方式</li>
+<li>结论：推荐使用</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">enum</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line">    INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-懒汉式"><a href="#2-懒汉式" class="headerlink" title="2. 懒汉式"></a>2. <strong>懒汉式</strong></h3><blockquote>
+<p><strong>延迟创建对象（有的方式存在线程安全问题）。</strong></p>
+</blockquote>
+<h4 id="线程不安全方式"><a href="#线程不安全方式" class="headerlink" title="线程不安全方式"></a>线程不安全方式</h4><ul>
+<li>起到了Lazy Loading的效果，但是只能在单线程下使用。</li>
+<li>如果在多线程下，一个线程进入了if (singleton == null)判断语句块，还未来得及往下执行，另一个线程也通过了这个判断语句，这时便 <strong>会产生多个实例</strong>。所以 在多线程环境下不可使用这种方式。</li>
+<li>结论： *<em>在实际开发中，不要使用这种方式.</em></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> SingleTon singleTon;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getSingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (singleTon == <span class="keyword">null</span>)&#123;</span><br><span class="line">            singleTon = <span class="keyword">new</span> SingleTon();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleTon;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="双重检查"><a href="#双重检查" class="headerlink" title="双重检查"></a><strong>双重检查</strong></h4><ul>
+<li><p>双重检查概念是多线程开发中常使用到的，如代码中所示，我们进行了两次if (singleton == null)检查，这样就可以保证线程安全了。</p>
+</li>
+<li><p>这样，实例化代码只会执行一次，后面再次访问时，判断if (singleton == null)，直接return实例化对象，也避免的反复进行方法同步.</p>
+</li>
+<li><p><strong>线程安全；延迟加载；效率较高</strong></p>
+</li>
+<li><p>结论： *<em>在实际开发中，推荐使用这种单例设计模式</em></p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> SingleTon singleTon;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getSingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (singleTon == <span class="keyword">null</span>)&#123;</span><br><span class="line">            <span class="keyword">synchronized</span> (SingleTon.class)&#123;</span><br><span class="line">                <span class="keyword">if</span> (singleTon == <span class="keyword">null</span>)</span><br><span class="line">                    singleTon = <span class="keyword">new</span> SingleTon();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> singleTon;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="静态内部类形式"><a href="#静态内部类形式" class="headerlink" title="静态内部类形式"></a><strong>静态内部类形式</strong></h4><ol>
+<li>这种方式采用了类加载的机制来保证初始化实例时只有一个线程。</li>
+<li><strong>静态内部类方式在Singleton类被加载时并不会立即实例化，而是在需要实例化<br> 时，调用getSingleTon方法，才会加载Inner类，从而完成Singleton的实例化。</strong></li>
+<li>类的静态属性只会在第一次加载类的时候初始化，所以在这里，JVM帮助我们<br>保证了线程的安全性，在类进行初始化时，别的线程是无法进入的。</li>
+<li>优点： <strong>避免了线程不安全，利用静态内部类特点实现延迟加载，效率高</strong></li>
+<li>结论：推荐使用.</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SingleTon</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">SingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Inner</span></span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> SingleTon SINGLE_TON = <span class="keyword">new</span> SingleTon();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> SingleTon <span class="title">getSingleTon</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Inner.SINGLE_TON;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-使用场景："><a href="#3-使用场景：" class="headerlink" title="3.使用场景："></a>3.使用场景：</h3><ol>
+<li>单例模式保证了系统内存中该类只存在一个对象，节省了系统资源，对于一些需<br>要 <strong>频繁创建销毁</strong>的对象，使用单例模式可以 <strong>提高系统性能</strong>。</li>
+<li>当想实例化一个单例类的时候，必须要记住使用相应的获取对象的方法，而不是使<br>用new。</li>
+<li>单例模式使用的场景： <strong>需要频繁的进行创建和销毁的对象</strong>、 <strong>创建对象时耗时过多或<br> 耗费资源过多</strong>(即：重量级对象)，但又经常用到的对象、 <strong>工具类对象</strong>、 <strong>频繁访问数<br> 据库或文件的对象</strong>(比如数据源、session工厂等)。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>设计模式</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>设计模式</tag>
+        <tag>单例模式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Api】Java数学计算函数的总结</title>
+    <url>/2020/06/19/JAVA%E6%95%B0%E5%AD%A6%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0%E7%9A%84%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="1、NumberFormat类："><a href="#1、NumberFormat类：" class="headerlink" title="1、NumberFormat类："></a>1、NumberFormat类：</h2><pre><code>(public abstract class NumberFormat extends Format)
+//用java.text.NumberFormat类对输出的数字结果进行必要的格式化。
+
+//使用该类如下方法类实例化一个NumberFormat对象：
+  public static final NumberFormat getInstance()
+ //然后用该对象调用如下方法可以格式化数字number(返回字符串对象)：
+  public final String format(double number)
+  
+ 
+</code></pre>
+<h4 id="NumberFormat类有如下常用方法："><a href="#NumberFormat类有如下常用方法：" class="headerlink" title="NumberFormat类有如下常用方法："></a>NumberFormat类有如下常用方法：</h4><pre><code> public void setMaximumFractionDigits(int newValue)
+ //设置数的小数部分所允许的最大位数。
+
+ public void setMaximumIntegerDigits(int newValue)
+//设置数的整数部分所允许的最大位数。
+
+ public void setMinimumFractionDigits(int newValue)
+//设置数的小数部分所允许的最小位数。
+
+ public void setMinimumIntegerDigits(int newValue)
+//设置数的整数部分所允许的最小位数。
+</code></pre>
+<h1 id="2、-BigInteger类、BigDecimal类："><a href="#2、-BigInteger类、BigDecimal类：" class="headerlink" title="2、 BigInteger类、BigDecimal类："></a>2、 BigInteger类、BigDecimal类：</h1><pre><code>java.math包中的BigInteger类和BigDecimal类分别提供任意精度的整数和小数运算。
+ 
+构造方法如下：
+ BigInteger(String val) 
+ //将 BigInteger 的十进制字符串表示形式转换为 BigInteger。
+</code></pre>
+<h2 id="常用方法："><a href="#常用方法：" class="headerlink" title="常用方法："></a>常用方法：</h2><pre><code> abs() ；
+ //返回其值是此BigInteger的绝对值的BigInteger。
+
+ add(BigInteger val) ；
+ //返回其值为(this+val)的BigInteger。
+
+subtract(BigInteger val)；
+ //返回其值为(this-val)的BigInteger。
+
+multiply(BigInteger val)；
+ // 返回其值为(this*val)的BigInteger
+
+divide(BigInteger val)；
+ //返回其值为(this/val)的BigInteger
+
+remainder(BigInteger val)；
+ //返回其值为(this%val)的BigInteger
+
+ compareTo(BigInteger val)；
+  //将此BigInteger与指定的BigInteger进行比较。返回值1、0、-1分别表示大于、等于、小于
+
+pow(int exponent)；
+ //返回当前大数的exponent次幂
+
+ toString()； 
+ //返回此BigInteger的十进制字符串表示形式
+
+toString(int radix) ；
+//返回此BigInteger的给定基数(radix进制)的字符串表示形式
+</code></pre>
+<hr>
+<h2 id="3、数学常量"><a href="#3、数学常量" class="headerlink" title="3、数学常量"></a>3、数学常量</h2><pre><code>Math.PI: 圆周率常量 
+Math.E: 自然常量 
+数学函数
+[java] view plaincopy 
+abs() 
+  返回绝对值 
+ceil() 
+  返回一个大于等于操作数的最近整数值 
+  Math.ceil(8.7);
+   //9.0 
+  Math.ceil(9.0);
+   //9.0 
+  Math.ceil(9.0);
+   //9.0 
+   
+floor() 
+  返回一个不大于操作数的最近整数值 
+  Math.floor(8.7); //8.0 
+  Math.floor(9.0); //8.0 
+  Math.floor(9.0); //9.0 
+max() 
+  返回两个操作数的最大一个 
+  Math.max(1,2); 
+min() 
+  返回两个操作数的最小一个 
+  Math.min(1,2); 
+random() 
+  返回大于等于0.0小于1.0的随机double型 
+round() 
+  返回最接近操作数的整数(四舍五入) 
+toRadians() 
+  转换为弧度 
+  Math.toRadians(90.0); //1.57079... 
+sin() 
+  返回给定角度的正弦,操作数是double型 
+  Math.sin(Math.toRadians(90.0)); 
+  //求90度角的正弦值,返回1.0 
+cos() 
+  返回给定角度的余弦,操作数是double型 
+  Math.cos(Math.toRadians(0.0)); 
+  //求0度角的余弦值,返回1.0 
+tan() 
+  返回给定角度的正切,操作数是double型 
+  Math.tan(Math.toRadians(45.0));
+   //求45度角的正切值,返回1.0 
+sqrt() 
+  返回给定值的平方根,,操作数是double型 
+  Math.sqrt(4.0); //2.0 
+  Math.sqrt(-4.0); //Nan 
+toDegrees() 
+  返回给定弧度的角度值 
+  Math.toDegrees(Math.PI*0.5); //90.0 
+</code></pre>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>Api</category>
+        <category>数学计算</category>
+      </categories>
+      <tags>
+        <tag>Api</tag>
+        <tag>Math</tag>
+        <tag>Number</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Java】鸡兔同笼问题</title>
+    <url>/2020/05/16/%E9%B8%A1%E5%85%94%E5%90%8C%E7%AC%BC%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h3><p>已知鸡的数量为n只，兔的数量为m只，鸡兔的总头数为H个鸡兔的总脚数为Y只</p>
+<h3 id="for循环语法"><a href="#for循环语法" class="headerlink" title="for循环语法"></a>for循环语法</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for(表达式1；表达式2；表达式3 )&#123;</span><br><span class="line">	&#x2F;&#x2F;循环体</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>// 表达式1为赋值语句。<br>作用：为为循环变量赋初始值；<br>表达式2为条件语句。<br>作用：是循环结构的循环条件<br>表达式3为赋值语句（通常用++或–）。<br>作用：用开修改循环变量的值</p>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>我们已知鸡的数量为n，兔的数量为m。即</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">H&#x3D;n+m,Y&#x3D;2*n+4*m。</span><br></pre></td></tr></table></figure>
+
+<p>因为不知道鸡和兔的数量，那么我们先假设鸡的数量为1，然后用for循环寻其于兔所匹配的数量，即代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">		<span class="keyword">int</span> chicken,rabbit;</span><br><span class="line">		<span class="keyword">int</span> H,Y;</span><br><span class="line">		Scanner input=<span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">		System.out.println(<span class="string">&quot;请输入鸡和兔的总头数：&quot;</span>);</span><br><span class="line">		H=input.nextInt();</span><br><span class="line">		System.out.println(<span class="string">&quot;请输入鸡和兔的总脚数：&quot;</span>);</span><br><span class="line">		Y=input.nextInt();</span><br><span class="line">		<span class="keyword">for</span>(chicken=<span class="number">1</span>;chicken&lt;Y/<span class="number">2</span>;chicken++)&#123;</span><br><span class="line">			<span class="keyword">for</span>(rabbit=<span class="number">1</span>;rabbit&lt;Y/<span class="number">4</span>;rabbit++)&#123;</span><br><span class="line">				<span class="keyword">if</span>(chicken+rabbit==H &amp;&amp; chicken*<span class="number">2</span>+rabbit*<span class="number">4</span>==Y)&#123;</span><br><span class="line">					System.out.println(<span class="string">&quot;鸡的数量为：&quot;</span>+chicken+<span class="string">&quot;只，&quot;</span>+<span class="string">&quot;兔的数量为：&quot;</span>+rabbit+<span class="string">&quot;只。&quot;</span>);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出效果如下：</p>
+<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/20210329140509.png"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>思维</tag>
+        <tag>for循环</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Mysql】记一次Mysql批量插入多条记录</title>
+    <url>/2020/05/05/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/</url>
+    <content><![CDATA[<blockquote>
+<p>Mysql中一条Insert语句批量插入多条记录…</p>
+</blockquote>
+<span id="more"></span>
+<h4 id="插入语句常用写法"><a href="#插入语句常用写法" class="headerlink" title="插入语句常用写法"></a>插入语句常用写法</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT INTO items(name,city,price,number,picture)  VALUES(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式只能够一次插入一条数据，要想插入多条数据，就得多次调用此sql语句，意味着多次与数据库建立连接。但是这样一来，就会增加服务器的负荷，因为，执行每一次SQL服务器都要同样对SQL进行分析、优化等操作。幸好MySQL提供了另一种解决方案，就是使用一条INSERT语句来插入多条记录。这并不是标准的SQL语法，因此只能在MySQL中使用。</p>
+<h4 id="一条INSERT语句插入批量数据的写法"><a href="#一条INSERT语句插入批量数据的写法" class="headerlink" title="一条INSERT语句插入批量数据的写法"></a>一条INSERT语句插入批量数据的写法</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">[表名]([列名],[列名]) </span><br><span class="line"> VALUES</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值]));</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，和原来的常规INSERT语句的区别，仅仅是在VALUES 后面增加值的排列，每条记录之间用英文输入法状态下的逗号隔开，是不是so easy。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">items(name,city,price,number,picture) </span><br><span class="line">VALUES</span><br><span class="line">(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;),</span><br><span class="line">(&#39;耐克运动鞋2&#39;,&#39;广州2&#39;,500,1000,&#39;002.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这样，就实现了一次性插入了2条数据。</p>
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>在程序中，插入批量数据时，最好使用这种通过一条INSERT语句来一次性插入的方式。这样可以避免程序和数据库建立多次连接，从而增加服务器负荷。</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【MySQL】MySQL语句大全及用法</title>
+    <url>/2020/04/12/MySQL%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5/</url>
+    <content><![CDATA[<p>零、用户管理：</p>
+<p>1、新建用户：</p>
+<blockquote>
+<p>CREATE USER name IDENTIFIED BY ‘ssapdrow’;</p>
+</blockquote>
+<p>2、更改密码：</p>
+<blockquote>
+<p>SET PASSWORD FOR name=PASSWORD(‘fdddfd’);</p>
+</blockquote>
+<p>3、权限管理</p>
+<blockquote>
+<p>SHOW GRANTS FOR name; //查看name用户权限</p>
+</blockquote>
+<blockquote>
+<p>GRANT SELECT ON db_name.* TO name; //给name用户db_name数据库的所有权限</p>
+</blockquote>
+<blockquote>
+<p>REVOKE SELECT ON db_name.* TO name; //GRANT的反操作，去除权限；</p>
+</blockquote>
+<p>一、数据库操作：</p>
+<p>1、查看数据库：</p>
+<blockquote>
+<p>SHOW DATABASES;</p>
+</blockquote>
+<p>2、创建数据库：</p>
+<blockquote>
+<p>CREATE DATABASE db_name; //db_name为数据库名</p>
+</blockquote>
+<p>3、使用数据库：</p>
+<blockquote>
+<p>USE db_name;</p>
+</blockquote>
+<p>4、删除数据库：</p>
+<blockquote>
+<p>DROP DATABASE db_name;</p>
+</blockquote>
+<p>二、创建表：</p>
+<p>1、创建表：</p>
+<blockquote>
+<p>CREATE TABLE table_name(</p>
+</blockquote>
+<blockquote>
+<p>id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT, //id值，无符号、非空、递增——唯一性，可做主键。</p>
+</blockquote>
+<blockquote>
+<p>name VARCHAR(60) NOT NULL</p>
+</blockquote>
+<blockquote>
+<p>score TINYINT UNSIGNED NOT NULL DEFAULT 0, //设置默认列值</p>
+</blockquote>
+<blockquote>
+<p>PRIMARY KEY(id)</p>
+</blockquote>
+<blockquote>
+<p>)ENGINE=InnoDB //设置表的存储引擎，一般常用InnoDB和MyISAM；InnoDB可靠，支持事务；MyISAM高效不支持全文检索</p>
+</blockquote>
+<blockquote>
+<p>DEFAULT charset=utf8; //设置默认的编码，防止数据库中文乱码</p>
+</blockquote>
+<p>如果有条件的创建数据表还可以使用 &gt;CREATE TABLE IF NOT EXISTS tb_name(……..</p>
+<p>2、复制表：</p>
+<blockquote>
+<p>CREATE TABLE tb_name2 SELECT * FROM tb_name;</p>
+</blockquote>
+<p>或者部分复制：</p>
+<blockquote>
+<p>CREATE TABLE tb_name2 SELECT id,name FROM tb_name;</p>
+</blockquote>
+<p>3、创建临时表：</p>
+<blockquote>
+<p>CREATE TEMPORARY TABLE tb_name(这里和创建普通表一样);</p>
+</blockquote>
+<p>4、查看数据库中可用的表：</p>
+<blockquote>
+<p>SHOW TABLES;</p>
+</blockquote>
+<p>5、查看表的结构：</p>
+<blockquote>
+<p>DESCRIBE tb_name;</p>
+</blockquote>
+<p>也可以使用：</p>
+<blockquote>
+<p>SHOW COLUMNS in tb_name; //from也可以</p>
+</blockquote>
+<p>6、删除表：</p>
+<blockquote>
+<p>DROP [ TEMPORARY ] TABLE [ IF EXISTS ] tb_name[ ,tb_name2…….];</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>DROP TABLE IF EXISTS tb_name;</p>
+</blockquote>
+<p>7、表重命名：</p>
+<blockquote>
+<p>RENAME TABLE name_old TO name_new;</p>
+</blockquote>
+<p>还可以使用：</p>
+<blockquote>
+<p>ALTER TABLE name_old RENAME name_new;</p>
+</blockquote>
+<p>三、修改表：</p>
+<p>1、更改表结构：</p>
+<blockquote>
+<p>ALTER TABLE tb_name ADD[CHANGE,RENAME,DROP] …要更改的内容…</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>ALTER TABLE tb_name ADD COLUMN address varchar(80) NOT NULL;</p>
+</blockquote>
+<blockquote>
+<p>ALTER TABLE tb_name DROP address;</p>
+</blockquote>
+<blockquote>
+<p>ALTER TABLE tb_name CHANGE score score SMALLINT(4) NOT NULL;</p>
+</blockquote>
+<p>四、插入数据：</p>
+<p>1、插入数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(id,name,score)VALUES(NULL,’张三’,140),(NULL,’张四’,178),(NULL,’张五’,134);</p>
+</blockquote>
+<p>这里的插入多条数据直接在后边加上逗号，直接写入插入的数据即可；主键id是自增的列，可以不用写。</p>
+<p>2、插入检索出来的数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(name,score) SELECT name,score FROM tb_name2;</p>
+</blockquote>
+<p>五、更新数据：</p>
+<p>1、指定更新数据：</p>
+<blockquote>
+<p>UPDATE tb_name SET score=189 WHERE id=2;</p>
+</blockquote>
+<blockquote>
+<p>UPDATE tablename SET columnName=NewValue [ WHERE condition ]</p>
+</blockquote>
+<p>六、删除数据：</p>
+<p>1、删除数据：</p>
+<blockquote>
+<p>DELETE FROM tb_name WHERE id=3;</p>
+</blockquote>
+<p>七、条件控制：</p>
+<p>1、WHERE 语句：</p>
+<blockquote>
+<p>SELECT * FROM tb_name WHERE id=3;</p>
+</blockquote>
+<p>2、HAVING 语句：</p>
+<blockquote>
+<p>SELECT * FROM tb_name GROUP BY score HAVING count(*)&gt;2</p>
+</blockquote>
+<p>3、相关条件控制符：</p>
+<p>=、&gt;、</p>
+<p>AND 、OR</p>
+<p>Linke()用法中 % 为匹配任意、 _ 匹配一个字符（可以是汉字）</p>
+<p>IS NULL 空值检测</p>
+<p>八、MySQL的正则表达式：</p>
+<p>1、Mysql支持REGEXP的正则表达式：</p>
+<blockquote>
+<p>SELECT * FROM tb_name WHERE name REGEXP ‘^[A-D]’ //找出以A-D 为开头的name</p>
+</blockquote>
+<p>2、特殊字符需要转义。</p>
+<p>九、MySQL的一些函数：</p>
+<p>1、字符串链接——CONCAT()</p>
+<blockquote>
+<p>SELECT CONCAT(name,’=&gt;’,score) FROM tb_name</p>
+</blockquote>
+<p>2、数学函数：</p>
+<p>AVG、SUM、MAX、MIN、COUNT；</p>
+<p>3、文本处理函数：</p>
+<p>TRIM、LOCATE、UPPER、LOWER、SUBSTRING</p>
+<p>4、运算符：</p>
+<p>+、-、*、\</p>
+<p>5、时间函数：</p>
+<p>DATE()、CURTIME()、DAY()、YEAR()、NOW()…..</p>
+<p>十、分组查询：</p>
+<p>1、分组查询可以按照指定的列进行分组：</p>
+<blockquote>
+<p>SELECT COUNT(<em>) FROM tb_name GROUP BY score HAVING COUNT(</em>)&gt;1;</p>
+</blockquote>
+<p>2、条件使用Having；</p>
+<p>3、ORDER BY 排序：</p>
+<p>ORDER BY DESC|ASC =&gt;按数据的降序和升序排列</p>
+<p>十一、UNION规则——可以执行两个语句（可以去除重复行）</p>
+<p>十二、全文检索——MATCH和AGAINST</p>
+<p>1、SELECT MATCH(note_text)AGAINST(‘PICASO’) FROM tb_name;</p>
+<p>2、InnoDB引擎不支持全文检索，MyISAM可以；</p>
+<p>十三、视图</p>
+<p>1、创建视图</p>
+<blockquote>
+<p>CREATE VIEW name AS SELECT * FROM tb_name WHERE ~~ ORDER BY ~~;</p>
+</blockquote>
+<p>2、视图的特殊作用：</p>
+<p>a、简化表之间的联结（把联结写在select中）；</p>
+<p>b、重新格式化输出检索的数据（TRIM，CONCAT等函数）；</p>
+<p>c、过滤不想要的数据（select部分）</p>
+<p>d、使用视图计算字段值，如汇总这样的值。</p>
+<p>十四、使用存储过程：</p>
+<p>个人理解，存储过程就是一个自定义函数，有局部变量参数，可传入参数，可以返回值，不过这语法够呆滞的~~~</p>
+<p>1、创建存储过程：</p>
+<blockquote>
+<p>CREATE PROCEDURE pro(</p>
+</blockquote>
+<blockquote>
+<p>IN num INT,OUT total INT)</p>
+</blockquote>
+<blockquote>
+<p>BEGIN</p>
+</blockquote>
+<blockquote>
+<p>SELECT SUM(score) INTO total FROM tb_name WHERE id=num;</p>
+</blockquote>
+<blockquote>
+<p>END;</p>
+</blockquote>
+<p>***这里的 IN (传递一个值给存储过程)，OUT（从存储过程传出一个值），INOUT（对存储过程传入、传出），INTO（保存变量）</p>
+<p>2、调用存储过程：</p>
+<blockquote>
+<p>CALL pro(13,@total) //这里的存储过程两个变量，一个是IN一个是OUT，这里的OUT也是需要写上的，不写会出错</p>
+</blockquote>
+<blockquote>
+<p>SELECT @total //这里就可以看到结果了；</p>
+</blockquote>
+<p>3、存储过程的其他操作：</p>
+<blockquote>
+<p>SHOW PROCEDURE STATUS; //显示当期的存储过程</p>
+</blockquote>
+<blockquote>
+<p>DROP PROCEDURE pro; //删除指定存储过程</p>
+</blockquote>
+<p>十五、使用游标：</p>
+<p>对这个理解不是很懂，朋友多多指点哦~~~</p>
+<p>1、游标的操作</p>
+<blockquote>
+<p>CREATE PROCEDURE pro()</p>
+</blockquote>
+<blockquote>
+<p>BEGIN</p>
+</blockquote>
+<blockquote>
+<p>DECLARE ordername CURSOR FOR</p>
+</blockquote>
+<blockquote>
+<p>SELECT order_num FROM orders;</p>
+</blockquote>
+<blockquote>
+<p>END;</p>
+</blockquote>
+<blockquote>
+<p>OPEN ordername; //打开游标</p>
+</blockquote>
+<blockquote>
+<p>CLOSE ordername; //关闭游标</p>
+</blockquote>
+<p>十六、触发器：</p>
+<p>触发器是指在进行某项指定操作时，触发触发器内指定的操作；</p>
+<p>1、支持触发器的语句有DELETE、INSERT、UPDATE,其他均不支持</p>
+<p>2、创建触发器：</p>
+<blockquote>
+<p>CREATE TRIGGER trig AFTER INSERT ON ORDERS FOR EACH ROW SELECT NEW.orser_name;</p>
+</blockquote>
+<blockquote>
+<p>INSERT语句，触发语句，返回一个值</p>
+</blockquote>
+<p>3、删除触发器</p>
+<blockquote>
+<p>DROP TRIGGER trig;</p>
+</blockquote>
+<p>十七、语法整理：</p>
+<p>1、ALTER TABLE（修改表）</p>
+<p>ALTER TABLE table_name</p>
+<p>( ADD column datatype [ NULL | NOT NULL ] [ CONSTRAINTS ]</p>
+<p>CHANGE column datatype COLUMNS [ NULL | NOT NULL ] [ CONSTRAINTS ]</p>
+<p>DROP column，</p>
+<p>。。。。</p>
+<p>2、COMMIT(处理事务)</p>
+<blockquote>
+<p>COMMIT;</p>
+</blockquote>
+<p>3、CREATE INDEX(在一个或多个列上创建索引)</p>
+<p>CREATE INDEX index_name ON tb_name (column [ ASC | DESC ] , …….);</p>
+<p>4、CREATE PROCEDURE (创建存储过程)</p>
+<p>CREATE PROCEDURE pro([ parameters ])</p>
+<p>BEGIN</p>
+<p>……..</p>
+<p>END</p>
+<p>5、CREATE TABLE(创建表)</p>
+<p>CREATE TABLE tb_name(</p>
+<p>column_name datetype [ NULL | NOT NULL ] [ condtraints] ,</p>
+<p>column_name datetype [ NULL | NOT NULL ] [ condtraints] ,</p>
+<p>…….</p>
+<p>PRIMARY KEY( column_name )</p>
+<p>)ENGINE=[ InnoDB | MyiSAM ]DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;</p>
+<p>6、CREATE USER(创建用户)</p>
+<p>CREATE USER user_name [ @hostname ] [ IDENTIFIED BY [ PASSWORD ] ‘pass_word’ ];</p>
+<p>7、CREATE VIEW （在一个或多个表上创建视图）</p>
+<p>CREATE [ OR REPLACE ] VIEW view_name AS SELECT。。。。。。</p>
+<p>8、DELETE (从表中删除一行或多行)</p>
+<p>DELETE FROM table_name [WHERE ……]</p>
+<p>9、DROP(永久删除数据库及对象，如视图、索引等)</p>
+<p>DROP DATEBASE | INDEX | PROCEDURE | TABLE | TRIGGER | USER | VIEW name</p>
+<p>10、INSERT （给表添加行）</p>
+<p>INSERT INTO tb_name [ ( columns,…… ) ] VALUES(value1,…………);</p>
+<p>使用SELECT值插入：</p>
+<p>INSERT INTO tb_name [ ( columns,…… ) ]</p>
+<p>SELECT columns , ……. FROM tb_name [ WHERE …… ] ;</p>
+<p>11、ROLLBACK（撤销一个事务处理块）</p>
+<p>ROLLBACK [ TO savapointname ];</p>
+<p>12、SAVEPOINT(为ROLLBACK设置保留点)</p>
+<p>SAVEPOINT sp1;</p>
+<p>13、SELECT (检索数据，显示信息)</p>
+<p>SELECT column_name,…..FROM tb_name [ WHERE ] [ UNION ] [ RROUP BY ] [ HAVING ] [ ORDER BY ]</p>
+<p>14、START TRANSACTION (一个新的事务处理块的开始)</p>
+<p>START TRANSACTION</p>
+<p>15、UPDATE(更新一个表中的一行或多行)</p>
+<p>UPDATE tb_name SET column=value,……[ where ]</p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>数据库</category>
+        <category>MySQL</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>数据库</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【图床】使用PicGo + 码云（Gitee）完成图床环境搭建</title>
+    <url>/2020/02/25/PicGo%20+%20%E7%A0%81%E4%BA%91%EF%BC%88Gitee%EF%BC%89%E5%9B%BE%E5%BA%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<blockquote>
+<p>本地写markdown使用Typora因为图片在本地，上传到其他博客上的时候，图片处理实在麻烦，之前也不知道什么是图床，今天无意间看到教程特地尝试一把，把我这个小白遇到的问题记录一下，顺便分享下自己的解决的小方法。</p>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="需要准备的软件"><a href="#需要准备的软件" class="headerlink" title="需要准备的软件"></a>需要准备的软件</h3><p>1.PicGo 文章末尾有百度云链接</p>
+<p>百度搜码云：进入后 </p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE2NTc1Ni5wbmc?x-oss-process=image/format,png"><br>进入后向下滑，找到下面的下载安装</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3MDAzMC5wbmc?x-oss-process=image/format,png"><br>下面就跳转到GitHub下载，</p>
+<p>tips：感觉这样进去，会快一点，直接进GitHub，总是在转圈圈，要是有大佬知道的，欢迎评论</p>
+<p>进入后向下滑动</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3MDQ0NS5wbmc?x-oss-process=image/format,png"></p>
+<p>点击上面的箭头，直接下载，点击安装就好了（一定要闭着眼安装哟）</p>
+<p>tips：GitHub有时候还是不能进，我会在文章末尾放上网盘链接</p>
+<p>2.node.js</p>
+<p>这里是我的一个坑，</p>
+<p>之前没有安装node.js,导致后面安装gitee插件装不上，我也不会node.js</p>
+<p>具体按照步骤可以看<a href="https://blog.csdn.net/adisonW/article/details/95475229">迪檬的博客</a></p>
+<p>最后提示一点：安装完node.js一定要重启电脑，</p>
+<h3 id="码云的准备"><a href="#码云的准备" class="headerlink" title="码云的准备"></a>码云的准备</h3><p>创建仓库：</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3MjQxNi5wbmc?x-oss-process=image/format,png"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NDAyMS5wbmc?x-oss-process=image/format,png"></p>
+<p>创建服务<img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NDIyOS5wbmc?x-oss-process=image/format,png"></p>
+<p>点击启动</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NDMzOC5wbmc?x-oss-process=image/format,png"></p>
+<h3 id="PicGo设置"><a href="#PicGo设置" class="headerlink" title="PicGo设置"></a>PicGo设置</h3><p>安装gitte</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NDkyOS5wbmc?x-oss-process=image/format,png"></p>
+<p>配置Gitee图床</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NTM1NC5wbmc?x-oss-process=image/format,png"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE4MTMyMC5wbmc?x-oss-process=image/format,png"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NTg1OS5wbmc?x-oss-process=image/format,png"></p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE4MDIyMS5wbmc?x-oss-process=image/format,png"></p>
+<p>提交后会验证你的密码，最后生成下面的</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE4MDQwNS5wbmc?x-oss-process=image/format,png"></p>
+<p>把复制的私人令牌粘贴到图床的 taken位置</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE3NTM1NC5wbmc?x-oss-process=image/format,png"></p>
+<p>最后点击确定。</p>
+<p>重新启动到PicGo</p>
+<p>开始使用</p>
+<p>把图片直接拖动到上传区，或者把复制的图片点击右下角的剪切板图片上传</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE4MDkzMy5wbmc?x-oss-process=image/format,png"></p>
+<p>点击对应图片的按钮复制</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly9naXRlZS5jb20vbGl1c2h1bWluZy9pbWFnZS9yYXcvbWFzdGVyL2ltZy8yMDIwMDMyNjE4MDk1OS5wbmc?x-oss-process=image/format,png"></p>
+<p>图片上传</p>
+<p>复制完直接在 typora等Markdown编辑器粘贴使用即可。</p>
+<blockquote>
+<p>作者：<a href="https://blog.csdn.net/qq_40683225">阿刀的笔记本</a></p>
+<p>链接：<a href="https://blog.csdn.net/qq_40683225/article/details/105124810">https://blog.csdn.net/qq_40683225/article/details/105124810</a></p>
+<p>来源：CSDN</p>
+<p>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>博客</category>
+        <category>图床</category>
+      </categories>
+      <tags>
+        <tag>Blog</tag>
+        <tag>图床</tag>
+        <tag>Gitee</tag>
+        <tag>环境</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Maven】Maven安装及配置</title>
+    <url>/2020/02/23/Maven%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE/</url>
+    <content><![CDATA[<h3 id="一：-安装包准备："><a href="#一：-安装包准备：" class="headerlink" title="一： 安装包准备："></a>一： 安装包准备：</h3><p>apache-maven-3.6.3-bin</p>
+<h3 id="二：-安装配置"><a href="#二：-安装配置" class="headerlink" title="二： 安装配置"></a>二： 安装配置</h3><p>Maven是一款自动化构建工具，用于自动化构建和依赖管理。</p>
+<p>1.    解压到相应目录</p>
+<p><img src="https://img-blog.csdnimg.cn/20210328202024582.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+<p>2.    配置环境变量。终端输入：mvn -v</p>
+<p>【此电脑右击—-选择属性—-高级系统设置—-环境变量—–新建【系统变量】—–输入MAVEN_HOME—-输入解压目录】</p>
+<p><img src="https://img-blog.csdnimg.cn/20210328202319574.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70">  </p>
+<p><img src="https://img-blog.csdnimg.cn/20210328202944938.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+<p>【接着选择Path—–选择编辑—-选择新建—–输入%MAVEN_HOME%\bin—-选择确定】</p>
+<p><img src="https://img-blog.csdnimg.cn/20210328225743864.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+<p>打开终端窗口输入查看是否配置成功： mvn -v </p>
+<p><img src="https://img-blog.csdnimg.cn/20210328225947447.png"></p>
+<h3 id="三：-Maven-依赖地址更改为阿里镜像"><a href="#三：-Maven-依赖地址更改为阿里镜像" class="headerlink" title="三：  Maven 依赖地址更改为阿里镜像"></a>三：  Maven 依赖地址更改为阿里镜像</h3><p>1.   在安装目录下的 /conf 目录下找到settings.xml文件。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210328230825923.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+<p>2.      修改settings.xml文件【修改依赖地址为阿里云镜像，配置本地仓库】</p>
+<p><img src="https://img-blog.csdnimg.cn/20210328231214752.png"></p>
+<p><img src="https://img-blog.csdnimg.cn/20210328231418206.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+<blockquote>
+<p>    <!-- 阿里云仓库 --><br>    <mirror><br>        <id>alimaven</id><br>        <mirrorOf>central</mirrorOf><br>        <name>aliyun maven</name><br>        <url><a href="http://maven.aliyun.com/nexus/content/repositories/central/">http://maven.aliyun.com/nexus/content/repositories/central/</a></url><br>    </mirror></p>
+</blockquote>
+<h3 id="四：-idea中配置maven"><a href="#四：-idea中配置maven" class="headerlink" title="四： idea中配置maven"></a>四： idea中配置maven</h3><p><img src="https://img-blog.csdnimg.cn/20210328232331966.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L20wXzQ2NDQwNzk0,size_16,color_FFFFFF,t_70"></p>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>环境</category>
+      </categories>
+      <tags>
+        <tag>Maven</tag>
+        <tag>开发环境</tag>
+        <tag>Idea</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【框架】Mybatis全面详解</title>
+    <url>/2020/02/13/Mybatis%E8%AF%A6%E8%A7%A3/</url>
+    <content><![CDATA[<h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><ol>
+<li>mybatis是什么？有什么特点？ 它是一款半自动的ORM持久层框架，具有较高的SQL灵活性，支持高级映射(一对一，一对多)，动态SQL，延迟加载和缓存等特性，但它的数据库无关性较低</li>
+</ol>
+<ul>
+<li>什么是ORM？ Object Relation Mapping，对象关系映射。对象指的是Java对象，关系指的是数据库中的关系模型，对象关系映射，指的就是在Java对象和数据库的关系模型之间建立一种对应关系，比如用一个Java的Student类，去对应数据库中的一张student表，类中的属性和表中的列一一对应。Student类就对应student表，一个Student对象就对应student表中的一行数据</li>
+<li>为什么mybatis是半自动的ORM框架？ 用mybatis进行开发，需要手动编写SQL语句。而全自动的ORM框架，如hibernate，则不需要编写SQL语句。用hibernate开发，只需要定义好ORM映射关系，就可以直接进行CRUD操作了。由于mybatis需要手写SQL语句，所以它有较高的灵活性，可以根据需要，自由地对SQL进行定制，也因为要手写SQL，当要切换数据库时，SQL语句可能就要重写，因为不同的数据库有不同的 <strong>方言</strong>(Dialect)，所以mybatis的数据库无关性低。虽然mybatis需要手写SQL，但相比JDBC，它提供了输入映射和输出映射，可以很方便地进行SQL参数设置，以及结果集封装。并且还提供了 <strong>关联查询</strong>和 <strong>动态SQL</strong>等功能，极大地提升了开发的效率。并且它的学习成本也比hibernate低很多</li>
+</ul>
+<h2 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a>快速入门</h2><p>只需要通过如下几个步骤，即可用mybatis快速进行持久层的开发</p>
+<ol>
+<li>编写全局配置文件</li>
+<li>编写mapper映射文件</li>
+<li>加载全局配置文件，生成SqlSessionFactory</li>
+<li>创建SqlSession，调用mapper映射文件中的SQL语句来执行CRUD操作</li>
+</ol>
+<h3 id="原生开发示例"><a href="#原生开发示例" class="headerlink" title="原生开发示例"></a>原生开发示例</h3><ol>
+<li>在本地虚拟机mysql上创建一个库yogurt，并在里面创建一张student表 <img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjUyMTAzMDQzMDUucG5n?x-oss-process=image/format,png"></li>
+<li>打开IDEA，创建一个maven项目 <img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjUyMDQ4MTA5NjYucG5n?x-oss-process=image/format,png"></li>
+<li>导入依赖的jar包</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysqlgroupId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-javaartifactId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.10version&gt;</span><br><span class="line">       dependency&gt;</span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatisgroupId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatisartifactId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.6version&gt;</span><br><span class="line">       dependency&gt;</span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombokgroupId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombokartifactId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.18.12version&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">scope</span>&gt;</span>providedscope&gt;</span><br><span class="line">       dependency&gt;</span><br><span class="line">       <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junitgroupId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junitartifactId&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.10version&gt;</span><br><span class="line">           <span class="tag">&lt;<span class="name">scope</span>&gt;</span>testscope&gt;</span><br><span class="line">       dependency&gt;</span><br><span class="line">   dependencies&gt;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>创建一个po类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yogurt.po;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="meta">@Setter</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@ToString</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer score;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer gender;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>编写mapper映射文件(编写SQL)</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;test&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student;</span><br><span class="line">    select&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insert&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span>&gt;</span></span><br><span class="line">        INSERT INTO student (name,score,age,gender) VALUES (#&#123;name&#125;,#&#123;score&#125;,#&#123;age&#125;,#&#123;gender&#125;);</span><br><span class="line">    insert&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;delete&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;int&quot;</span>&gt;</span></span><br><span class="line">        DELETE FROM student WHERE id = #&#123;id&#125;;</span><br><span class="line">    delete&gt;</span><br><span class="line">mapper&gt;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>编写数据源properties文件</li>
+</ol>
+<figure class="highlight properties"><table><tr><td class="code"><pre><span class="line"><span class="meta">db.url</span>=<span class="string">jdbc:mysql://192.168.183.129:3306/yogurt?characterEncoding=utf8</span></span><br><span class="line"><span class="meta">db.user</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">db.password</span>=<span class="string">root</span></span><br><span class="line"><span class="meta">db.driver</span>=<span class="string">com.mysql.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>编写全局配置文件(主要是配置数据源信息)</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">&quot;properties/db.properties&quot;</span>&gt;</span>properties&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.driver&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.url&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.user&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.password&#125;&quot;</span>/&gt;</span></span><br><span class="line">            dataSource&gt;</span><br><span class="line">        environment&gt;</span><br><span class="line">    environments&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;StudentMapper.xml&quot;</span>/&gt;</span></span><br><span class="line">    mappers&gt;</span><br><span class="line"></span><br><span class="line">configuration&gt;</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>编写dao类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yogurt.dao;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.yogurt.po.Student;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.io.Resources;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSession;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.session.SqlSessionFactoryBuilder;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStream;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentDao</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">StudentDao</span><span class="params">(String configPath)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		InputStream inputStream = Resources.getResourceAsStream(configPath);</span><br><span class="line">		sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> List&lt;Student&gt; <span class="title">findAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		List&lt;Student&gt; studentList = sqlSession.selectList(<span class="string">&quot;findAll&quot;</span>);</span><br><span class="line">		sqlSession.close();</span><br><span class="line">		<span class="keyword">return</span> studentList;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">addStudent</span><span class="params">(Student student)</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		<span class="keyword">int</span> rowsAffected = sqlSession.insert(<span class="string">&quot;insert&quot;</span>, student);</span><br><span class="line">		sqlSession.commit();</span><br><span class="line">		sqlSession.close();</span><br><span class="line">		<span class="keyword">return</span> rowsAffected;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">deleteStudent</span><span class="params">(<span class="keyword">int</span> id)</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		<span class="keyword">int</span> rowsAffected = sqlSession.delete(<span class="string">&quot;delete&quot;</span>,id);</span><br><span class="line">		sqlSession.commit();</span><br><span class="line">		sqlSession.close();</span><br><span class="line">		<span class="keyword">return</span> rowsAffected;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol start="9">
+<li>测试</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> StudentDao studentDao;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		studentDao = <span class="keyword">new</span> StudentDao(<span class="string">&quot;mybatis-config.xml&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		Student student = <span class="keyword">new</span> Student();</span><br><span class="line">		student.setName(<span class="string">&quot;yogurt&quot;</span>);</span><br><span class="line">		student.setAge(<span class="number">24</span>);</span><br><span class="line">		student.setGender(<span class="number">1</span>);</span><br><span class="line">		student.setScore(<span class="number">100</span>);</span><br><span class="line">		studentDao.addStudent(student);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">findAllTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		List&lt;Student&gt; all = studentDao.findAll();</span><br><span class="line">		all.forEach(System.out::println);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjUyMTQ0MjI1MjkucG5n?x-oss-process=image/format,png"></p>
+<p><strong>总结</strong>：</p>
+<ol>
+<li>编写mapper.xml，书写SQL，并定义好SQL的输入参数，和输出参数</li>
+<li>编写全局配置文件，配置数据源，以及要加载的mapper.xml文件</li>
+<li>通过全局配置文件，创建SqlSessionFactory</li>
+<li>每次进行CRUD时，通过SqlSessionFactory创建一个SqlSession</li>
+<li>调用SqlSession上的 <code>selectOne</code>， <code>selectList</code>， <code>insert</code>， <code>delete</code>， <code>update</code>等方法，传入mapper.xml中SQL标签的id，以及输入参数</li>
+</ol>
+<p><strong>注意要点</strong></p>
+<ol>
+<li>全局配置文件中，各个标签要按照如下顺序进行配置，因为mybatis加载配置文件的源码中是按照这个顺序进行解析的</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>各个子标签说明如下</p>
+<ul>
+<li><code>&lt;properties&gt;&lt;/properties&gt;</code> 一般将数据源的信息单独放在一个properties文件中,然后用这个标签引入,在下面environment标签中，就可以用 <code>$&#123;&#125;</code>占位符快速获取数据源的信息</li>
+<li><code>&lt;settings&gt;&lt;/settings&gt;</code> 用来开启或关闭mybatis的一些特性，比如可以用 <code>&lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;&gt;&lt;/setting&gt;</code>来开启延迟加载，可以用 <code>&lt;settings name=&quot;cacheEnabled&quot; value=&quot;true&quot;&gt;&lt;/settings&gt;</code>来开启二级缓存</li>
+<li><code>&lt;typealiases&gt;&lt;/typealiases&gt;</code> 在mapper.xml中需要使用 <code>parameterType</code>和 <code>resultType</code>属性来配置SQL语句的输入参数类型和输出参数类型，类必须要写上全限定名，比如一个SQL的返回值映射为Student类，则 <code>resultType</code>属性要写 <code>com.yogurt.po.Student</code>，这太长了，所以可以用别名来简化书写，比如</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">typeAlias</span> <span class="attr">type</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span> <span class="attr">alias</span>=<span class="string">&quot;student&quot;</span>/&gt;</span></span><br><span class="line">typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<p>之后就可以在 <code>resultType</code>上直接写 <code>student</code>，mybatis会根据别名配置自动找到对应的类。 当然，如果想要一次性给某个包下的所有类设置别名，可以用如下的方式</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">&quot;com.yogurt.po&quot;</span>/&gt;</span></span><br><span class="line">typeAliases&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如此，指定包下的所有类，都会以简单类名的小写形式，作为它的别名 另外，对于基本的Java类型 -&gt; 8大基本类型以及包装类，以及String类型，mybatis提供了默认的别名，别名为其简单类名的小写，比如原本需要写 <code>java.lang.String</code>，其实可以简写为 <code>string</code></p>
+<ul>
+<li><code>&lt;typehandlers&gt;&lt;/typehandlers&gt;</code> 用于处理Java类型和Jdbc类型之间的转换，mybatis有许多内置的TypeHandler，比如StringTypeHandler，会处理Java类型String和Jdbc类型CHAR和VARCHAR。这个标签用的不多</li>
+<li><code>&lt;objectfactory&gt;&lt;/objectfactory&gt;</code> mybatis会根据 <code>resultType</code>或 <code>resultMap</code>的属性来将查询得到的结果封装成对应的Java类，它有一个默认的DefaultObjectFactory，用于创建对象实例，这个标签用的也不多</li>
+<li><code>&lt;plugins&gt;&lt;/plugins&gt;</code> 可以用来配置mybatis的插件，比如在开发中经常需要对查询结果进行分页，就需要用到pageHelper分页插件，这些插件就是通过这个标签进行配置的。在mybatis底层，运用了责任链模式+动态代理去实现插件的功能</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">interceptor</span>=<span class="string">&quot;com.github.pagehelper.PageInterceptor&quot;</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;helperDialect&quot;</span> <span class="attr">value</span>=<span class="string">&quot;mysql&quot;</span>/&gt;</span></span><br><span class="line">  plugin&gt;</span><br><span class="line">plugins&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>&lt;environments&gt;&lt;/environments&gt;</code> 用来配置数据源</li>
+<li><code>&lt;mappers&gt;&lt;/mappers&gt;</code> 用来配置mapper.xml映射文件，这些xml文件里都是SQL语句</li>
+</ul>
+<ol start="2">
+<li>mapper.xml的SQL语句中的占位符 <code>$&#123;&#125;</code>和 <code>#&#123;&#125;</code> 一般会采用 <code>#&#123;&#125;</code>， <code>#&#123;&#125;</code>在mybatis中，最后会被解析为 <code>?</code>，其实就是Jdbc的PreparedStatement中的 <code>?</code>占位符，它有预编译的过程，会对输入参数进行类型解析(如果入参是String类型，设置参数时会自动加上引号)，可以防止SQL注入，如果 <code>parameterType</code>属性指定的入参类型是简单类型的话(简单类型指的是8种java原始类型再加一个String)， <code>#&#123;&#125;</code>中的变量名可以任意，如果入参类型是pojo，比如是Student类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么 <code>#&#123;name&#125;</code>表示取入参对象Student中的name属性， <code>#&#123;age&#125;</code>表示取age属性，这个过程是通过反射来做的，这不同于 <code>$&#123;&#125;</code>， <code>$&#123;&#125;</code>取对象的属性使用的是OGNL(Object Graph Navigation Language)表达式 而 <code>$&#123;&#125;</code>，一般会用在模糊查询的情景，比如 <code>SELECT * FROM student WHERE name like &#39;%$&#123;name&#125;%&#39;;</code> 它的处理阶段在 <code>#&#123;&#125;</code>之前，它不会做参数类型解析，而仅仅是做了字符串的拼接，若入参的Student对象的name属性为zhangsan，则上面那条SQL最终被解析为 <code>SELECT * FROM student WHERE name like &#39;%zhangsan%&#39;;</code> 而如果此时用的是 <code>SELECT * FROM student WHERE name like &#39;%#&#123;name&#125;%&#39;;</code> 这条SQL最终就会变成 <code>SELECT * FROM student WHERE name like &#39;%&#39;zhangsan&#39;%&#39;;</code> 所以模糊查询只能用 <code>$&#123;&#125;</code>,虽然普通的入参也可以用 <code>$&#123;&#125;</code>,但由于 <code>$&#123;&#125;</code>不会做类型解析，就存在SQL注入的风险，比如 <code>SELECT * FROM user WHERE name = &#39;$&#123;name&#125;&#39; AND password = &#39;$&#123;password&#125;&#39;</code> 我可以让一个user对象的password属性为 <code>&#39;OR &#39;1&#39; = &#39;1</code>，最终的SQL就变成了 <code>SELECT * FROM user WHERE name = &#39;yogurt&#39; AND password = &#39;&#39;OR &#39;1&#39; = &#39;1&#39;</code>，因为 <code>OR &#39;1&#39; = &#39;1&#39;</code>恒成立，这样攻击者在不需要知道用户名和密码的情况下，也能够完成登录验证 另外,对于pojo的入参， <code>$&#123;&#125;</code>中获取对象属性的语法和 <code>#&#123;&#125;</code>几乎一样，但 <code>$&#123;&#125;</code>在mybatis底层是通过OGNL表达式语言进行处理的，这跟 <code>#&#123;&#125;</code>的反射处理有所不同 对于简单类型(8种java原始类型再加一个String)的入参， <code>$&#123;&#125;</code>中参数的名字必须是 <code>value</code>，例子如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;fuzzyCount&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;string&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;int&quot;</span>&gt;</span></span><br><span class="line">        SELECT count(1) FROM `user` WHERE name like &#x27;%$&#123;value&#125;%&#x27;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>为什么简单类型的变量名必须为value呢？因为mybatis源码中写死的value，哈哈 <img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjUyMzIxNDQxNjUucG5n?x-oss-process=image/format,png"></p>
+<p>上面其实是比较原始的开发方式，我们需要编写dao类，针对mapper.xml中的每个SQL标签，做一次封装，SQL标签的id要以 <strong>字符串</strong>的形式传递给SqlSession的相关方法，容易出错，非常不方便；为了简化开发，mybatis提供了mapper接口代理的开发方式，不需要再编写dao类，只需要编写一个mapper接口，一个mapper的接口和一个mapper.xml相对应，只需要调用SqlSession对象上的 <code>getMapper()</code>，传入mapper接口的class信息，即可获得一个mapper代理对象，直接调用mapper接口中的方法，即相当于调用mapper.xml中的各个SQL标签，此时就不需要指定SQL标签的id字符串了，mapper接口中的一个方法，就对应了mapper.xml中的一个SQL标签</p>
+<h3 id="基于Mapper代理的示例"><a href="#基于Mapper代理的示例" class="headerlink" title="基于Mapper代理的示例"></a>基于Mapper代理的示例</h3><p>全局配置文件和mapper.xml文件是最基本的配置，仍然需要。不过，这次我们不编写dao类，我们直接创建一个mapper接口</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yogurt.mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.yogurt.po.Student;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">StudentMapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Student&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">insert</span><span class="params">(Student student)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">delete</span><span class="params">(Integer id)</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="function">List&lt;Student&gt; <span class="title">findByName</span><span class="params">(String value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而我们的mapper.xml文件如下</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.yogurt.mapper.StudentMapper&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findAll&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student;</span><br><span class="line">    select&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insert&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span>&gt;</span></span><br><span class="line">        INSERT INTO student (name,score,age,gender) VALUES (#&#123;name&#125;,#&#123;score&#125;,#&#123;age&#125;,#&#123;gender&#125;);</span><br><span class="line">    insert&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">delete</span> <span class="attr">id</span>=<span class="string">&quot;delete&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;int&quot;</span>&gt;</span></span><br><span class="line">        DELETE FROM student WHERE id = #&#123;id&#125;;</span><br><span class="line">    delete&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findByName&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;string&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;student&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student WHERE name like &#x27;%$&#123;value&#125;%&#x27;;</span><br><span class="line">    select&gt;</span><br><span class="line">mapper&gt;</span><br></pre></td></tr></table></figure>
+
+<p>mapper接口和mapper.xml之间需要遵循一定规则，才能成功的让mybatis将mapper接口和mapper.xml绑定起来</p>
+<ol>
+<li>mapper接口的全限定名，要和mapper.xml的namespace属性一致</li>
+<li>mapper接口中的方法名要和mapper.xml中的SQL标签的id一致</li>
+<li>mapper接口中的方法入参类型，要和mapper.xml中SQL语句的入参类型一致</li>
+<li>mapper接口中的方法出参类型，要和mapper.xml中SQL语句的返回值类型一致</li>
+</ol>
+<p>测试代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapperProxyTest</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		InputStream resourceAsStream = Resources.getResourceAsStream(<span class="string">&quot;mybatis-config.xml&quot;</span>);</span><br><span class="line">		sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(resourceAsStream);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">		List&lt;Student&gt; studentList = mapper.findAll();</span><br><span class="line">		studentList.forEach(System.out::println);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjUyMzQ5NDU4NjUucG5n?x-oss-process=image/format,png"></p>
+<p>这个mapper接口，mybatis会自动找到对应的mapper.xml，然后对mapper接口使用动态代理的方式生成一个代理类</p>
+<h3 id="基于注解的示例"><a href="#基于注解的示例" class="headerlink" title="基于注解的示例"></a>基于注解的示例</h3><p>如果实在看xml配置文件不顺眼，则可以考虑使用注解的开发方式，不过注解的开发方式，会将SQL语句写到代码文件中，后续的维护性和扩展性不是很好（如果想修改SQL语句，就得改代码，得重新打包部署，而如果用xml方式，则只需要修改xml，用新的xml取替换旧的xml即可）</p>
+<p>使用注解的开发方式，也还是得有一个全局配置的xml文件，不过mapper.xml就可以省掉了，具体操作只用2步，如下</p>
+<ol>
+<li>创建一个Mapper接口</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yogurt.mapper;</span><br><span class="line"><span class="keyword">import</span> com.yogurt.po.Student;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Insert;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.annotations.Select;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">PureStudentMapper</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Select(&quot;SELECT * FROM student&quot;)</span></span><br><span class="line">	<span class="function">List&lt;Student&gt; <span class="title">findAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Insert(&quot;INSERT INTO student (name,age,score,gender) VALUES (#&#123;name&#125;,#&#123;age&#125;,#&#123;score&#125;,#&#123;gender&#125;)&quot;)</span></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">insert</span><span class="params">(Student student)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在全局配置文件中修改 <code>&lt;mappers&gt;&lt;/mappers&gt;</code>标签，直接指定加载这个类</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">&quot;properties/db.properties&quot;</span>&gt;</span>properties&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">typeAliases</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">&quot;com.yogurt.po&quot;</span>/&gt;</span></span><br><span class="line">    typeAliases&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.driver&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.url&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.user&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.password&#125;&quot;</span>/&gt;</span></span><br><span class="line">            dataSource&gt;</span><br><span class="line">        environment&gt;</span><br><span class="line">    environments&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">class</span>=<span class="string">&quot;com.yogurt.mapper.PureStudentMapper&quot;</span>/&gt;</span></span><br><span class="line">    mappers&gt;</span><br><span class="line"></span><br><span class="line">configuration&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PureMapperTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		InputStream inputStream = Resources.getResourceAsStream(<span class="string">&quot;mybatis-config.xml&quot;</span>);</span><br><span class="line">		sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		PureStudentMapper mapper = sqlSession.getMapper(PureStudentMapper.class);</span><br><span class="line">		mapper.insert(<span class="keyword">new</span> Student(<span class="number">10</span>,<span class="string">&quot;Tomcat&quot;</span>,<span class="number">120</span>,<span class="number">60</span>,<span class="number">0</span>));</span><br><span class="line">        sqlSession.commit();</span><br><span class="line">		List&lt;Student&gt; studentList = mapper.findAll();</span><br><span class="line">		studentList.forEach(System.out::println);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjYwMDA2NTA5MjAucG5n?x-oss-process=image/format,png"></p>
+<p>上面我们见到了在全局配置文件中，两种配置mapper的方式，分别是</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">class</span>=<span class="string">&quot;com.yogurt.mapper.PureStudentMapper&quot;</span>/&gt;</span></span><br><span class="line">mappers&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mapper</span> <span class="attr">resource</span>=<span class="string">&quot;StudentMapper.xml&quot;</span>/&gt;</span></span><br><span class="line">mappers&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>而在实际工作中，一般我们会将一张表的SQL操作封装在一个mapper.xml中，可能有许多张表需要操作，那么我们是不是要在 <code>&lt;mappers&gt;&lt;/mappers&gt;</code>标签下写多个 <code>&lt;mapper&gt;&lt;/mapper&gt;</code>标签呢？其实不用，还有第三种加载mapper的方法，使用 <code>&lt;package&gt;&lt;/package&gt;</code>标签</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">&quot;com.yogurt.mapper&quot;</span>/&gt;</span></span><br><span class="line">mappers&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样就会自动加载 <code>com.yogurt.mapper</code>包下的所有mapper，这种方式需要将mapper接口文件和mapper.xml文件都放在 <code>com.yogurt.mapper</code>包下，且接口文件和xml文件的文件名要一致。注意，在IDEA的maven开发环境下，maven中还需配置 <code>&lt;resources&gt;&lt;/resources&gt;</code>标签，否则maven打包不会将java源码目录下的xml文件打包进去，见下文</p>
+<p>三种加载mapper的方式总结</p>
+<ul>
+<li><code>&lt;mapper resource&gt;&lt;/mapper&gt;</code> 加载普通的xml文件，传入xml的相对路径(相对于类路径)</li>
+<li><code>&lt;mapper class&gt;&lt;/mapper&gt;</code> 使用mapper接口的全限定名来加载，若mapper接口采用注解方式，则不需要xml;若mapper接口没有采用注解方式，则mapper接口和xml文件的名称要相同，且在同一个目录</li>
+<li><code>&lt;package name&gt;&lt;/package&gt;</code> 扫描指定包下的所有mapper，若mapper接口采用注解方式，则不需要xml;若mapper接口没有采用注解方式，则mapper接口和xml文件的名称要相同，且在同一目录</li>
+</ul>
+<p>注意：用后两种方式加载mapper接口和mapper.xml映射文件时，可能会报错</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMDU2NTc0NTcucG5n?x-oss-process=image/format,png"></p>
+<p>仔细检查了一下，mapper接口文件和xml映射文件确实放在了同一个目录下，而且文件名一致，xml映射文件的namespace也和mapper接口的全限定名对的上。为什么会这样呢？<br><img src="https://img-blog.csdnimg.cn/20200527222736840.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZjajEwMDk3ODQ4MTQ=,size_16,color_FFFFFF,t_70"></p>
+<p>其实是因为，对于 <code>src/main/java</code> 源码目录下的文件，maven打包时只会将该目录下的java文件打包，而其他类型的文件都不会被打包进去，去工程目录的target目录下看看maven构建后生成的文件</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMTA5NTI0MjMucG5n?x-oss-process=image/format,png"></p>
+<p>我们需要在pom.xml中的 <code>&lt;build&gt;&lt;/build&gt;</code> 标签下 添加 <code>&lt;resources&gt;&lt;/resources&gt;</code> 标签，指定打包时要将xml文件打包进去</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/javadirectory&gt;</span><br><span class="line">                <span class="tag">&lt;<span class="name">includes</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">include</span>&gt;</span>**/*.xmlinclude&gt;</span><br><span class="line">                includes&gt;</span><br><span class="line">            resource&gt;</span><br><span class="line">        resources&gt;</span><br><span class="line">build&gt;</span><br></pre></td></tr></table></figure>
+
+<p>此时再用maven进行打包，看到对应目录下有了xml映射文件</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMTA4MzU0MDcucG5n?x-oss-process=image/format,png"></p>
+<p>此时再运行单元测试，就能正常得到结果了</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><h3 id="主键返回"><a href="#主键返回" class="headerlink" title="主键返回"></a>主键返回</h3><p>通常我们会将数据库表的主键id设为自增。在插入一条记录时，我们不设置其主键id，而让数据库自动生成该条记录的主键id，那么在插入一条记录后，如何得到数据库自动生成的这条记录的主键id呢？有两种方式</p>
+<ol>
+<li>使用 <code>useGeneratedKeys</code>和 <code>keyProperty</code>属性</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insert&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span> <span class="attr">useGeneratedKeys</span>=<span class="string">&quot;true&quot;</span> <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span>&gt;</span></span><br><span class="line">        INSERT INTO student (name,score,age,gender) VALUES (#&#123;name&#125;,#&#123;score&#125;,#&#123;age&#125;,#&#123;gender&#125;);</span><br><span class="line">    insert&gt;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>使用 <code>&lt;selectkey&gt;&lt;/selectkey&gt;</code>子标签</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">insert</span> <span class="attr">id</span>=<span class="string">&quot;insert&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;com.yogurt.po.Student&quot;</span>&gt;</span></span><br><span class="line">        INSERT INTO student (name,score,age,gender) VALUES (#&#123;name&#125;,#&#123;score&#125;,#&#123;age&#125;,#&#123;gender&#125;);</span><br><span class="line">        <span class="tag">&lt;<span class="name">selectKey</span> <span class="attr">keyProperty</span>=<span class="string">&quot;id&quot;</span> <span class="attr">order</span>=<span class="string">&quot;AFTER&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;int&quot;</span> &gt;</span></span><br><span class="line">            SELECT LAST_INSERT_ID();</span><br><span class="line">        selectKey&gt;</span><br><span class="line">    insert&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果使用的是mysql这样的支持自增主键的数据库，可以简单的使用第一种方式；对于不支持自增主键的数据库，如oracle，则没有主键返回这一概念，而需要在插入之前先生成一个主键。此时可以用 <code>&lt;selectkey&gt;&lt;/selectkey&gt;</code>标签，设置其 <code>order</code>属性为 <code>BEFORE</code>，并在标签体内写上生成主键的SQL语句，这样在插入之前，会先处理 <code>&lt;selectkey&gt;&lt;/selectkey&gt;</code>，生成主键，再执行真正的插入操作。 <code>&lt;selectkey&gt;&lt;/selectkey&gt;</code>标签其实就是一条SQL，这条SQL的执行，可以放在 <strong>主SQL</strong>执行之前或之后，并且会将其执行得到的结果封装到入参的Java对象的指定属性上。注意 <code>&lt;selectkey&gt;&lt;/selectkey&gt;</code>子标签只能用在 <code>&lt;insert&gt;&lt;/insert&gt;</code>和 <code>&lt;update&gt;&lt;/update&gt;</code>标签中。上面的 <code>LAST_INSERT_ID()</code>实际上是MySQL提供的一个函数，可以用来获取最近插入或更新的记录的主键id。</p>
+<p>测试代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MapperProxyTest</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		InputStream resourceAsStream = Resources.getResourceAsStream(<span class="string">&quot;mybatis-config.xml&quot;</span>);</span><br><span class="line">		sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(resourceAsStream);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">		Student student = <span class="keyword">new</span> Student(-<span class="number">1</span>, <span class="string">&quot;Podman&quot;</span>, <span class="number">130</span>, <span class="number">15</span>, <span class="number">0</span>);</span><br><span class="line">		mapper.insert(student);</span><br><span class="line">		sqlSession.commit();</span><br><span class="line">		System.out.println(student.getId());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjYyMDQ5NTcyMDcucG5n?x-oss-process=image/format,png"></p>
+<h3 id="批量查询"><a href="#批量查询" class="headerlink" title="批量查询"></a>批量查询</h3><p>主要是动态SQL标签的使用，注意如果 <code>parameterType</code>是 <code>List</code>的话，则在标签体内引用这个 <code>List</code>，只能用变量名 <code>list</code>，如果 <code>parameterType</code>是数组，则只能用变量名 <code>array</code></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;batchFind&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;student&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.List&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student</span><br><span class="line">        <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;list != null and list.size() &gt; 0&quot;</span>&gt;</span></span><br><span class="line">                AND id in</span><br><span class="line">                <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;id&quot;</span> <span class="attr">open</span>=<span class="string">&quot;(&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span> <span class="attr">close</span>=<span class="string">&quot;)&quot;</span>&gt;</span></span><br><span class="line">                    #&#123;id&#125;</span><br><span class="line">                foreach&gt;</span><br><span class="line">            if&gt;</span><br><span class="line">        where&gt;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBatchQuery</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">	StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">	List&lt;Student&gt; students = mapper.batchFind(Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>));</span><br><span class="line">	students.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjYyMTA2NDEzMDAucG5n?x-oss-process=image/format,png"></p>
+<h3 id="动态SQL"><a href="#动态SQL" class="headerlink" title="动态SQL"></a>动态SQL</h3><p>可以根据具体的参数条件，来对SQL语句进行动态拼接。</p>
+<p>比如在以前的开发中，由于不确定查询参数是否存在，许多人会使用类似于 <code>where 1 = 1</code> 来作为前缀，然后后面用 <code>AND</code> 拼接要查询的参数，这样，就算要查询的参数为空，也能够正确执行查询，如果不加 <code>1 = 1</code>，则如果查询参数为空，SQL语句就会变成 <code>SELECT * FROM student where</code>，SQL不合法。</p>
+<p>mybatis里的动态标签主要有</p>
+<ul>
+<li><code>if</code></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;find&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;student&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;student&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student WHERE age &gt;= 18</span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;name != null and name != &#x27;&#x27;&quot;</span>&gt;</span></span><br><span class="line">            AND name like &#x27;%$&#123;name&#125;%&#x27;</span><br><span class="line">        if&gt;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+
+<p>当满足test条件时，才会将 <code>&lt;if&gt;&lt;/if&gt;</code>标签内的SQL语句拼接上去</p>
+<ul>
+<li><code>choose</code></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  SELECT * FROM BLOG WHERE state = &#x27;ACTIVE&#x27;</span><br><span class="line">  <span class="tag">&lt;<span class="name">choose</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">when</span> <span class="attr">test</span>=<span class="string">&quot;title != null&quot;</span>&gt;</span></span><br><span class="line">      AND title like #&#123;title&#125;</span><br><span class="line">    when&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">when</span> <span class="attr">test</span>=<span class="string">&quot;author != null and author.name != null&quot;</span>&gt;</span></span><br><span class="line">      AND author_name like #&#123;author.name&#125;</span><br><span class="line">    when&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">otherwise</span>&gt;</span></span><br><span class="line">      AND featured = 1</span><br><span class="line">    otherwise&gt;</span><br><span class="line">  choose&gt;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>trim</code><ul>
+<li><code>where</code> <code>&lt;where&gt;&lt;/where&gt;</code>标签只会在至少有一个子元素返回了SQL语句时，才会向SQL语句中添加WHERE，并且如果WHERE之后是以AND或OR开头，会自动将其删掉</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findActiveBlogLike&quot;</span></span></span><br><span class="line"><span class="tag">     <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  SELECT * FROM BLOG</span><br><span class="line">  <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;state != null&quot;</span>&gt;</span></span><br><span class="line">         state = #&#123;state&#125;</span><br><span class="line">    if&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;title != null&quot;</span>&gt;</span></span><br><span class="line">        AND title like #&#123;title&#125;</span><br><span class="line">    if&gt;</span><br><span class="line">    <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;author != null and author.name != null&quot;</span>&gt;</span></span><br><span class="line">        AND author_name like #&#123;author.name&#125;</span><br><span class="line">    if&gt;</span><br><span class="line">  where&gt;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+<p><code>&lt;where&gt;&lt;/where&gt;</code>标签可以用 <code>&lt;trim&gt;&lt;/trim&gt;</code>标签代替</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">&quot;WHERE&quot;</span> <span class="attr">prefixOverrides</span>=<span class="string">&quot;AND | OR&quot;</span>&gt;</span></span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">trim&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>set</code> 在至少有一个子元素返回了SQL语句时，才会向SQL语句中添加SET，并且如果SET之后是以 <code>,</code>开头的话，会自动将其删掉 <code>&lt;set&gt;&lt;/set&gt;</code>标签相当于如下的 <code>&lt;trim&gt;&lt;/trim&gt;</code>标签</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">trim</span> <span class="attr">prefix</span>=<span class="string">&quot;SET&quot;</span> <span class="attr">prefixOverrides</span>=<span class="string">&quot;,&quot;</span>&gt;</span></span><br><span class="line">   ...</span><br><span class="line"></span><br><span class="line">trim&gt;</span><br><span class="line">``` 可以通过 `<span class="tag">&lt;<span class="name">trim</span>&gt;</span><span class="tag">&lt;/<span class="name">trim</span>&gt;</span>`标签更加灵活地对SQL进行定制 实际上在mybatis源码，也能看到trim与set,where标签的父子关系 ![](https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjYyMTM0NTU3NzMucG5n?x-oss-process=image/format,png)</span><br><span class="line">* `foreach` 用来做迭代拼接的，通常会与SQL语句中的 `IN`查询条件结合使用，注意，到parameterType为List（链表）或者Array（数组），后面在引用时，参数名必须为list或者array。如在foreach标签中，collection属性则为需要迭代的集合，由于入参是个List，所以参数名必须为list</span><br><span class="line"></span><br><span class="line">```xml</span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;batchFind&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;student&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;list&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student WHERE id in</span><br><span class="line">        <span class="tag">&lt;<span class="name">foreach</span> <span class="attr">collection</span>=<span class="string">&quot;list&quot;</span> <span class="attr">item</span>=<span class="string">&quot;item&quot;</span> <span class="attr">open</span>=<span class="string">&quot;(&quot;</span> <span class="attr">separator</span>=<span class="string">&quot;,&quot;</span> <span class="attr">close</span>=<span class="string">&quot;)&quot;</span>&gt;</span></span><br><span class="line">          #&#123;item&#125;</span><br><span class="line">        foreach&gt;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>sql</code> 可将重复的SQL片段提取出来，然后在需要的地方，使用 <code>&lt;include&gt;&lt;/include&gt;</code>标签进行引用</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findUser&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;user&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;user&quot;</span>&gt;</span></span><br><span class="line">	SELECT * FROM user</span><br><span class="line">	<span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;whereClause&quot;</span>/&gt;</span></span><br><span class="line">select&gt;</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;whereClause&quot;</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line"></span><br><span class="line">         	AND username like &#x27;%$&#123;user.name&#125;%&#x27;</span><br><span class="line">         if&gt;</span><br><span class="line">     where&gt;</span><br><span class="line">sql&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>bind</code> mybatis的动态SQL都是用OGNL表达式进行解析的，如果需要创建OGNL表达式以外的变量，可以用bind标签</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;selectBlogsLike&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;Blog&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">bind</span> <span class="attr">name</span>=<span class="string">&quot;pattern&quot;</span> <span class="attr">value</span>=<span class="string">&quot;&#x27;%&#x27; + _parameter.getTitle() + &#x27;%&#x27;&quot;</span> /&gt;</span></span><br><span class="line">  SELECT * FROM BLOG</span><br><span class="line">  WHERE title LIKE #&#123;pattern&#125;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><ul>
+<li>一级缓存 默认开启，同一个SqlSesion级别共享的缓存，在一个SqlSession的生命周期内，执行2次相同的SQL查询，则第二次SQL查询会直接取缓存的数据，而不走数据库，当然，若第一次和第二次相同的SQL查询之间，执行了DML(INSERT/UPDATE/DELETE)，则一级缓存会被清空，第二次查询相同SQL仍然会走数据库 一级缓存在下面情况会被清除<ul>
+<li>在同一个SqlSession下执行 <strong>增删改</strong>操作时（不必提交），会清除一级缓存</li>
+<li>SqlSession提交或关闭时（关闭时会自动提交），会清除一级缓存</li>
+<li>对mapper.xml中的某个CRUD标签，设置属性 <code>flushCache=true</code>，这样会导致该MappedStatement的一级缓存，二级缓存都失效（一个CRUD标签在mybatis中会被封装成一个MappedStatement）</li>
+<li>在全局配置文件中设置 <code>&lt;setting name=&quot;localCacheScope&quot; value=&quot;STATEMENT&quot;&gt;&lt;/setting&gt;</code>，这样会使一级缓存失效，二级缓存不受影响</li>
+</ul>
+</li>
+<li>二级缓存 默认关闭，可通过全局配置文件中的 <code>&lt;settings name=&quot;cacheEnabled&quot; value=&quot;true&quot;&gt;&lt;/settings&gt;</code>开启二级缓存总开关，然后在某个具体的mapper.xml中增加 <code>&lt;cache&gt;&lt;/cache&gt;</code>，即开启了该mapper.xml的二级缓存。二级缓存是mapper级别的缓存，粒度比一级缓存大，多个SqlSession可以共享同一个mapper的二级缓存。注意开启二级缓存后，SqlSession需要提交，查询的数据才会被刷新到二级缓存当中</li>
+</ul>
+<p>缓存的详细分析可以参考我之前的文章 =&gt; <a href="https://blog.csdn.net/vcj1009784814/article/details/102978287">极简mybatis缓存</a></p>
+<h3 id="关联查询"><a href="#关联查询" class="headerlink" title="关联查询"></a>关联查询</h3><p>使用 <code>&lt;resultmap&gt;&lt;/resultmap&gt;</code> 标签以及 <code>&lt;association&gt;&lt;/association&gt;</code>和 <code>&lt;collection&gt;&lt;/collection&gt;</code> 子标签，进行关联查询，比较简单，不多说</p>
+<h3 id="延迟加载"><a href="#延迟加载" class="headerlink" title="延迟加载"></a>延迟加载</h3><p>延迟加载是结合关联查询进行应用的。也就是说，只在 <code>&lt;association&gt;&lt;/association&gt;</code>和 <code>&lt;collection&gt;&lt;/collection&gt;</code> 标签上起作用</p>
+<p>对于关联查询，若不采用延迟加载策略，而是一次性将关联的从信息都查询出来，则在主信息比较多的情况下，会产生 <strong>N+1问题</strong>，导致性能降低。比如用户信息和订单信息是一对多的关系，在查询用户信息时，设置了关联查询订单信息，如不采用延迟加载策略，假设共有100个用户，则我们查这100个用户的基本信息只需要一次SQL查询</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span>;</span><br></pre></td></tr></table></figure>
+
+<p>若开启了关联查询，且不是延迟加载，则对于这100个用户，会发出100条SQL去查用户对应的订单信息，这样会造成不必要的性能开销（其实我认为称之为1+N问题更为合适）</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> orders <span class="keyword">where</span> u_id <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> orders <span class="keyword">where</span> u_id <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">....</span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> orders <span class="keyword">where</span> u_id <span class="operator">=</span> <span class="number">100</span>;</span><br></pre></td></tr></table></figure>
+
+<p>当我们可能只关心id=3的用户的订单信息，则很多的关联信息是无用的，于是，采用延迟加载策略，可以按需加载从信息，在需要某个主信息对应的从信息时，再发送SQL去执行查询，而不是一次性全部查出来，这样能很好的提升性能。</p>
+<p>另外，针对N+1问题，除了采用延迟加载的策略按需进行关联查询。如果在某些场景下，确实需要查询所有主信息关联的从信息。在上面的例子中，就是如果确实需要把这100个用户关联的订单信息全部查询出来，那怎么办呢？这里提供2个解决思路。</p>
+<p>1是采用 <strong>连接查询</strong>，只使用1条SQL即可，如下</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">as</span> u <span class="keyword">left</span> <span class="keyword">join</span> orders <span class="keyword">as</span> o <span class="keyword">on</span> u.id <span class="operator">=</span> o.u_id;</span><br></pre></td></tr></table></figure>
+
+<p>但使用连接查询查出来的结果是两表的笛卡尔积，还需要自行进行数据的分组处理</p>
+<p>2是使用两个步骤来完成，先执行一条SQL，查出全部的用户信息，并把用户的id放在一个集合中，然后第二条SQL采用 <code>IN</code>关键字查询即可。这种方式也可以简化为子查询，如下</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> orders <span class="keyword">where</span> u_id <span class="keyword">in</span> (<span class="keyword">select</span> id <span class="keyword">from</span> <span class="keyword">user</span>);</span><br></pre></td></tr></table></figure>
+
+<p>现在说回来，mybatis的延迟加载默认是关闭的，可以通过全局配置文件中的 <code>&lt;setting name=&quot;lazyLoadingEnabled&quot; value=&quot;true&quot;&gt;&lt;/setting&gt;</code>来开启，开启后，所有的SELECT查询，若有关联对象，都会采用延迟加载的策略。当然，也可以对指定的某个CRUD标签单独禁用延迟加载策略，通过设置SELECT标签中的 <code>fetchType=eager</code>，则可以关闭该标签的延迟加载。</p>
+<p>(还有一个侵入式延迟加载的概念，在配置文件中通过 <code>&lt;setting name=&quot;aggressiveLazyLoading&quot; value=&quot;true&quot;&gt;&lt;/setting&gt;</code>来开启，大概是说，访问主对象中的主信息时，就会触发延迟加载，将从信息查询上来，这其实并不是真正意义的延迟加载，真正意义上的延迟加载应该是访问主对象中的从信息时，才触发延迟加载，去加载从信息，侵入式延迟加载默认是关闭的，一般情况下可以不用管他)</p>
+<p>注意，延迟加载在关联查询的场景下才有意义。需要配合 <code>&lt;resultmap&gt;&lt;/resultmap&gt;</code>标签下的 <code>&lt;association&gt;&lt;/association&gt;</code>和 <code>&lt;collecction&gt;&lt;/collecction&gt;</code> 标签使用</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;studentExt&quot;</span> <span class="attr">type</span>=<span class="string">&quot;com.yogurt.po.StudentExt&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;name&quot;</span> <span class="attr">column</span>=<span class="string">&quot;name&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;score&quot;</span> <span class="attr">column</span>=<span class="string">&quot;score&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;age&quot;</span> <span class="attr">column</span>=<span class="string">&quot;age&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">column</span>=<span class="string">&quot;gender&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">&quot;clazz&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;com.yogurt.po.Clazz&quot;</span> <span class="attr">column</span>=<span class="string">&quot;class_id&quot;</span></span></span><br><span class="line"><span class="tag">                     <span class="attr">select</span>=<span class="string">&quot;com.yogurt.mapper.ClassMapper.findById&quot;</span> <span class="attr">fetchType</span>=<span class="string">&quot;lazy&quot;</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    resultMap&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findLazy&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;string&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;studentExt&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM student WHERE name like &#x27;%$&#123;value&#125;%&#x27;;</span><br><span class="line">    select&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;findById&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;int&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.yogurt.po.Clazz&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM class WHERE id = #&#123;id&#125;</span><br><span class="line">select&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentExt</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer score;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Integer gender;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> Clazz clazz;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="逆向工程"><a href="#逆向工程" class="headerlink" title="逆向工程"></a>逆向工程</h3><p>mybatis官方提供了mapper自动生成工具mybatis-generator-core来针对单表，生成PO类，以及Mapper接口和mapper.xml映射文件。针对单表，可以不需要再手动编写xml配置文件和mapper接口文件了，非常方便。美中不足的是它不支持生成关联查询。一般做关联查询，就自己单独写SQL就好了。</p>
+<p>基于IDEA的mybatis逆向工程操作步骤如下</p>
+<ol>
+<li>配置maven插件</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.generatorgroupId&gt;</span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-generator-maven-pluginartifactId&gt;</span><br><span class="line">                <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.7version&gt;</span><br><span class="line">                <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                    <span class="tag">&lt;<span class="name">verbose</span>&gt;</span>trueverbose&gt;</span><br><span class="line">                    <span class="tag">&lt;<span class="name">overwrite</span>&gt;</span>trueoverwrite&gt;</span><br><span class="line">                configuration&gt;</span><br><span class="line">            plugin&gt;</span><br><span class="line">        plugins&gt;</span><br><span class="line">    build&gt;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>在resources目录下创建名为generatorConfig.xml的配置文件 <img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMDM1NTY3NjYucG5n?x-oss-process=image/format,png"></li>
+<li>配置文件的模板如下</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">generatorConfiguration</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">&quot;properties/xx.properties&quot;</span>&gt;</span>properties&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">classPathEntry</span> <span class="attr">location</span>=<span class="string">&quot;C:\Users\Vergi\.m2\repository\mysql\mysql-connector-java\8.0.11\mysql-connector-java-8.0.11.jar&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">context</span> <span class="attr">id</span>=<span class="string">&quot;default&quot;</span> <span class="attr">targetRuntime</span>=<span class="string">&quot;MyBatis3&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">commentGenerator</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suppressDate&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;suppressAllComments&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">        commentGenerator&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">jdbcConnection</span> <span class="attr">driverClass</span>=<span class="string">&quot;$&#123;db.driver&#125;&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">connectionURL</span>=<span class="string">&quot;$&#123;db.url&#125;&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">userId</span>=<span class="string">&quot;$&#123;db.user&#125;&quot;</span></span></span><br><span class="line"><span class="tag">                        <span class="attr">password</span>=<span class="string">&quot;$&#123;db.password&#125;&quot;</span>&gt;</span></span><br><span class="line">        jdbcConnection&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaTypeResolver</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;forceBigDecimals&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">        javaTypeResolver&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaModelGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;mybatis.generator.model&quot;</span></span></span><br><span class="line"><span class="tag">                            <span class="attr">targetProject</span>=<span class="string">&quot;.\src\main\java&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;enableSubPackages&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;trimStrings&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span> /&gt;</span></span><br><span class="line">        javaModelGenerator&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">sqlMapGenerator</span> <span class="attr">targetPackage</span>=<span class="string">&quot;mybatis.generator.mappers&quot;</span></span></span><br><span class="line"><span class="tag">                         <span class="attr">targetProject</span>=<span class="string">&quot;.\src\main\resources&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;enableSubPackages&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">        sqlMapGenerator&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">javaClientGenerator</span> <span class="attr">type</span>=<span class="string">&quot;XMLMAPPER&quot;</span></span></span><br><span class="line"><span class="tag">                             <span class="attr">targetPackage</span>=<span class="string">&quot;mybatis.generator.dao&quot;</span> <span class="attr">targetProject</span>=<span class="string">&quot;.\src\main\java&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;enableSubPackages&quot;</span> <span class="attr">value</span>=<span class="string">&quot;false&quot;</span> /&gt;</span></span><br><span class="line">        javaClientGenerator&gt;</span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">tableName</span>=<span class="string">&quot;student&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">tableName</span>=<span class="string">&quot;product&quot;</span>/&gt;</span></span><br><span class="line">    context&gt;</span><br><span class="line">generatorConfiguration&gt;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>双击执行mybatis-generator的maven插件 <img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMDM5MDI0OTEucG5n?x-oss-process=image/format,png"></li>
+</ol>
+<p>执行日志如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMDM5NDA4MTcucG5n?x-oss-process=image/format,png"></p>
+<p>生成的文件如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMDQwNDM5MTAucG5n?x-oss-process=image/format,png"></p>
+<p>能看到mybatis-generator除了给我们生成了基本的PO类（上图的Student和Product），还额外生成了Example类。Example类是为了方便执行SQL时传递查询条件的。使用的示例如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GeneratorTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		InputStream resourceAsStream = Resources.getResourceAsStream(<span class="string">&quot;mysql8-config.xml&quot;</span>);</span><br><span class="line">		sqlSessionFactory = <span class="keyword">new</span> SqlSessionFactoryBuilder().build(resourceAsStream);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">		StudentMapper mapper = sqlSession.getMapper(StudentMapper.class);</span><br><span class="line">		StudentExample example = <span class="keyword">new</span> StudentExample();</span><br><span class="line">		StudentExample.Criteria criteria = example.createCriteria();</span><br><span class="line">		criteria.andNameLike(<span class="string">&quot;%o%&quot;</span>);</span><br><span class="line">		List&lt;Student&gt; students = mapper.selectByExample(example);</span><br><span class="line">		students.forEach(System.out::println);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果如下</p>
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMTExMTUzNTYucG5n?x-oss-process=image/format,png"></p>
+<h3 id="PageHelper分页插件"><a href="#PageHelper分页插件" class="headerlink" title="PageHelper分页插件"></a>PageHelper分页插件</h3><p>使用该插件，快速实现查询结果的分页，使用步骤如下</p>
+<ol>
+<li>pom.xml中配置依赖</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelpergroupId&gt;</span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelperartifactId&gt;</span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.6version&gt;</span><br><span class="line">dependency&gt;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>mybatis全局配置文件中配置 <code>&lt;plugin&gt;&lt;/plugin&gt;</code>标签</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span> <span class="attr">resource</span>=<span class="string">&quot;properties/xx.properties&quot;</span>&gt;</span>properties&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">interceptor</span>=<span class="string">&quot;com.github.pagehelper.PageInterceptor&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;helperDialect&quot;</span> <span class="attr">value</span>=<span class="string">&quot;mysql&quot;</span>/&gt;</span></span><br><span class="line">        plugin&gt;</span><br><span class="line">    plugins&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">environments</span> <span class="attr">default</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">environment</span> <span class="attr">id</span>=<span class="string">&quot;development&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">transactionManager</span> <span class="attr">type</span>=<span class="string">&quot;JDBC&quot;</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">dataSource</span> <span class="attr">type</span>=<span class="string">&quot;POOLED&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;driver&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.driver&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;url&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.url&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.user&#125;&quot;</span>/&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> <span class="attr">value</span>=<span class="string">&quot;$&#123;db.password&#125;&quot;</span>/&gt;</span></span><br><span class="line">            dataSource&gt;</span><br><span class="line">        environment&gt;</span><br><span class="line">    environments&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">mappers</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">package</span> <span class="attr">name</span>=<span class="string">&quot;mybatis.generator.dao&quot;</span>/&gt;</span></span><br><span class="line">    mappers&gt;</span><br><span class="line"></span><br><span class="line">configuration&gt;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在执行查询之前，先设置分页信息</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">PageHelper.startPage(<span class="number">1</span>,<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<p>先看一下查所有数据</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">	ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);</span><br><span class="line"></span><br><span class="line">	List&lt;Product&gt; products = mapper.selectByExample(<span class="keyword">new</span> ProductExample());</span><br><span class="line">	products.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMTIzMjk5ODgucG5n?x-oss-process=image/format,png"> 加上PageHelper分页</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line">	ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);</span><br><span class="line">	PageHelper.startPage(<span class="number">1</span>,<span class="number">3</span>);</span><br><span class="line">	List&lt;Product&gt; products = mapper.selectByExample(<span class="keyword">new</span> ProductExample());</span><br><span class="line">	products.forEach(System.out::println);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://imgconvert.csdnimg.cn/aHR0cDovL3Fhc2IxMXhxeS5ia3QuY2xvdWRkbi5jb20vaW1hZ2UtMjAyMDA1MjcyMTI0MzI1NDMucG5n?x-oss-process=image/format,png"><br><strong>特别注意</strong>：在编写mapper.xml的时候，SQL语句的结尾不要带上 <code>;</code>，因为PageHelper插件是在SQL末尾拼接 <code>LIMIT</code>关键字来进行分页的，若SQL语句带上了 <code>;</code>，就会造成SQL语法错误<br><img src="https://img-blog.csdnimg.cn/20210318100134383.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZjajEwMDk3ODQ4MTQ=,size_16,color_FFFFFF,t_70"><br>另外，PageHelper会先查询总数量，然后再发出分页查询，打开mybatis的日志时，可以看到发出了2条SQL<img src="https://img-blog.csdnimg.cn/20210318101330171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZjajEwMDk3ODQ4MTQ=,size_16,color_FFFFFF,t_70"><br>当开启PageHelper时，查询得到的 <code>List</code>实际是PageHelper中自定义的一个类 <code>Page</code>，这个类实现了 <code>List</code>接口，并封装了分页的相关信息（总页数，当前页码等）。<br><img src="https://img-blog.csdnimg.cn/20210318101700947.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3ZjajEwMDk3ODQ4MTQ=,size_16,color_FFFFFF,t_70"><br>可以通过 <code>PageInfo</code>来获取分页的相关信息，代码如下</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	SqlSession sqlSession = factory.openSession();</span><br><span class="line">	PageHelper.startPage(<span class="number">1</span>,<span class="number">3</span>);</span><br><span class="line">	ProductMapper mapper = sqlSession.getMapper(ProductMapper.class);</span><br><span class="line">	List&lt;Product&gt; list = mapper.findAll();</span><br><span class="line">	list.forEach(System.out::println);</span><br><span class="line">	PageInfo&lt;Product&gt; pageInfo = <span class="keyword">new</span> PageInfo&lt;&gt;(list);</span><br><span class="line">	System.out.println(pageInfo.getTotal());</span><br><span class="line">	System.out.println(pageInfo.getPageSize());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>PageHelper插件的源码分析可以查看我之前的文章 =&gt;<br><a href="https://blog.csdn.net/vcj1009784814/article/details/99759738">极简PageHelper源码分析</a></p>
+<h3 id="Mybatis-Plus"><a href="#Mybatis-Plus" class="headerlink" title="Mybatis Plus"></a>Mybatis Plus</h3><p>mybatis虽然非常方便，但也需要编写大量的SQL语句，于是mybatis plus就应运而生了。它是一个mybatis增强工具，为了简化开发，提高效率。搭配Spring-Boot食用简直不要太爽。</p>
+<p>可以参考我的这篇文章 <a href="https://blog.csdn.net/vcj1009784814/article/details/115159687">mybatis-plus一发入魂</a> ，或者<a href="http://mp.baomidou.com/#/">mybatis-plus官网</a>，以及慕课网的<a href="https://www.imooc.com/learn/1130">入门教程</a>和<a href="https://www.imooc.com/learn/1171">进阶教程</a></p>
+<p><strong>（完）</strong></p>
+<blockquote>
+<p>本文来源： CSDN</p>
+<p>原文链接：<a href="https://blog.csdn.net/vcj1009784814/article/details/106391982?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522161697772016780262573278%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=161697772016780262573278&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_click~default-1-106391982.pc_search_result_no_baidu_js&utm_term=mybatis">点击跳转</a></p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>后端</category>
+        <category>框架</category>
+        <category>Mybatis</category>
+      </categories>
+      <tags>
+        <tag>框架</tag>
+        <tag>数据库</tag>
+        <tag>Mybatis</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【工具】将论坛上文章保存成Markdown文件</title>
+    <url>/2020/01/12/%E5%B0%86%E8%AE%BA%E5%9D%9B%E4%B8%8A%E6%96%87%E7%AB%A0%E4%BF%9D%E5%AD%98%E6%88%90markdown%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<blockquote>
+<p>平时我们在简书、掘金、CSDN上看到一些优秀的文章，想收藏到自己本地保存成Markdown文件，如果手敲的话比较费时费力，所以找了个工具来帮我们完成。</p>
+</blockquote>
+<span id="more"></span>
+
+<p>推荐使用<a href="https://github.com/croqaz/clean-mark">Clean-mark</a>，这是一个很棒的工具，针对你的需求，它可以将博客文章转换为干净的Markdown文本文件。</p>
+<p>Github项目地址：<a href="https://github.com/croqaz/clean-mark">https://github.com/croqaz/clean-mark</a></p>
+<p>安装：</p>
+<pre><code>npm install clean-mark --global
+</code></pre>
+<p>使用:</p>
+<pre><code>clean-mark &quot;http://some-website.com/fancy-article&quot;
+</code></pre>
+<p>回车之后当前文件夹会上生成对应的<code>.md</code>格式的文件。 </p>
+<p>示例：</p>
+<pre><code>clean-mark &quot;https://jeffjade.com/2017/12/31/136-talk-about-nicelinks-site/&quot;
+</code></pre>
+<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/20210325131130.png" alt="成功输出内容"></p>
+<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/20210325111015.png" alt="示例"></p>
+<p>更多Clean-mark特质可参见帮助：<a href="https://link.zhihu.com/?target=https://github.com/croqaz/clean-mark%23why-">https://github.com/croqaz/clean-mark#why-</a> 。</p>
+]]></content>
+      <categories>
+        <category>杂技术</category>
+        <category>工具</category>
+        <category>markdown</category>
+      </categories>
+      <tags>
+        <tag>Blog</tag>
+        <tag>Markdown</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【博客】Hexo免费搭建一个属于自己的博客</title>
+    <url>/2019/10/01/Hexo%E5%85%8D%E8%B4%B9%E6%90%AD%E5%BB%BA%E4%B8%80%E4%B8%AA%E5%B1%9E%E4%BA%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<blockquote>
+<p>作为一个开发者，都想要有一个属于自己的、网址上带有自己名字的博客，有的人用简书或者GitHub来写文章，不过那些都是第三方平台，不是自己的，只有属于自己的一个博客才会显得很酷很装逼有没有😝，OK接下来咱们开始搭建吧！</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>该博客用的是Hexo框架，基于Node.js，搭建博客首先需要有一个GitHub账号并且配置了SSH Keys（申请步骤这里就不介绍了，网上教程很多），然后在GitHub里创建一个名为<code>username.github.io</code>的仓库，还需要安装<code>Git</code>、安装<code>Node.js</code>、安装<code>Hexo</code>。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p><strong>创建GitHub仓库</strong></p>
+<p>创建一个名为<code>username.github.io</code>的仓库<br>在GitHub中新建仓库相信你们都会，点击 New repository 创建，注意：仓库名称一定是<code>username.github.io</code>这种格式。<br><img src="https://gitee.com/gitlihaojie/images/raw/master/img/20210324184801.png" alt="create"></p>
+<p><strong>安装Git</strong></p>
+<p>如果已安装可跳过</p>
+<p>方法一、通过HomeBrew来安装</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">先安装HomeBrew（如果已安装可跳过）</span><br><span class="line">终端执行命令   $ /usr/bin/ruby -e &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)&quot;</span><br><span class="line">然后安装git    $ brew install git</span><br></pre></td></tr></table></figure>
+<p>方法二、你也可以通过下载安装程序来安装</p>
+<blockquote>
+<p>验证：执行<code>git --version</code>如果输出类似<code>git version 2.15.0</code>说明安装成功了</p>
+</blockquote>
+<p><strong>安装Node.js</strong></p>
+<p>先安装nvm，这是Node.js版本管理器，可以轻松切换Node.js版本。 这里有两种方式安装。如果使用curl的方式安装，安装完成之后一定要重启终端。</p>
+<p>方法一、通过HomeBrew来安装（推荐）</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ brew install node</span><br></pre></td></tr></table></figure>
+<p>方法二、curl安装方式</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ curl https://raw.github.com/creationix/nvm/master/install.sh | sh</span><br><span class="line">安装完成后，重启终端并执行下列命令即可安装 Node.js</span><br><span class="line">$ nvm install stable</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>验证：执行npm –version如果输出类似5.5.1说明安装成功了</p>
+</blockquote>
+<p><strong>安装Hexo</strong></p>
+<p>所有必备的应用程序安装完成后，即可使用 npm 安装 Hexo</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<h2 id="建站"><a href="#建站" class="headerlink" title="建站"></a>建站</h2><ol>
+<li><p>创建资源<br> 安装 Hexo 完成后，在你喜欢的目录下新建一个文件夹命名为username（替换成你喜欢的名字），然后cd到username文件夹下</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ cd username</span><br><span class="line">$ hexo init</span><br><span class="line">$ npm install</span><br></pre></td></tr></table></figure>
+<p> 执行完毕后你将看到在你刚创建的文件夹下会有很多资源</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/jsdetghlihaooudimg.png" alt="文件目录"></p>
+<ol start="2">
+<li><p>基础配置</p>
+<p> 接下来打开username下的<code>_config.yml</code>文件（上图中的第一个文件），修改一下里面几个关键的信息，修改完记得保存，注意：冒号后面要有空格。</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">title: lihaojiem    //你博客的名字</span><br><span class="line">author: lihaojie    //你的名字</span><br><span class="line">language: zh-Hans   //语言-简体中文</span><br></pre></td></tr></table></figure>
+<p> 上面这3个字段是关键信息，如需修改其他信息请参考配置。</p>
+</li>
+<li><p>主题安装</p>
+<p> username下的themes文件夹中存放的是主题，默认的是landscape主题，如果你不喜欢可以安装其他主题。NexT主题是一套简约的主题，是目前使用最火的一个主题，下面我们安装一下该主题，你也可参考<a href="http://theme-next.iissnan.com/getting-started.html">安装NexT</a>。Hexo还有更多主题供你选择。</p>
+<p> <strong>安装NexT主题</strong>：</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ cd username        //进入到username文件夹下</span><br><span class="line">$ git clone https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+<p> <strong>启用NexT主题</strong>：</p>
+<p> 打开username下的<code>_config.yml</code>文件（上图中的第一个文件），找到<code>theme</code>字段将其值更改为<code>next</code>。</p>
+<p> 验证主题：<br> 注意：每次切换主题之后、验证主题之前都要清除 Hexo 的缓存</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo clean    //清除缓存</span><br><span class="line">开始验证：启动Hexo本地服务器</span><br><span class="line">$ hexo s</span><br></pre></td></tr></table></figure>
+<p> 然后你将会看到终端输出</p>
+ <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">INFO  Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.</span><br></pre></td></tr></table></figure>
+<p> 这行的意思是说你用浏览器打开 <a href="http://localhost:4000/">http://localhost:4000</a> 便可看到你的博客了，这只是本地的测试，如果测试没问题就执行Ctrl+C退出去，此时该地址就不能访问了。</p>
+<p> OK，现在，你已经成功安装并启用了 NexT 主题。接下来就是对该主题的一些设置，详细可参考<a href="https://links.jianshu.com/go?to=http://theme-next.iissnan.com/getting-started.html%23theme-settings">NexT主题设定</a>。</p>
+</li>
+</ol>
+<h2 id="写作"><a href="#写作" class="headerlink" title="写作"></a>写作</h2><p>以上所有的工作都完成了，并设置了一套你自己喜欢的主题样式，接下来就可以写博客了。</p>
+<ol>
+<li><p>新建一篇文章</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo new layout title</span><br></pre></td></tr></table></figure>
+<p>layout：模板，如果不写将使用默认模板，一般不写，直接<code>$ hexo new title</code><br>title：文章标题，如果标题包含空格的话，请使用引号括起来。<br>新建的文章将会存在<code>username/source/_posts</code>中，<code>_posts</code>就是默认模板，文章文件名称将会是<code>title.md</code>，接下来就可以打开该文件进行编辑写你的文章了。<br>注：也可以直接新建<code>.md</code>格式的文件，写好以后放在<code>_posts</code>文件夹下，也是可以识别到的。</p>
+</li>
+<li><p>生成静态文件<br>写完文章之后执行，来生成静态网页文件</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo g        //hexo generate的缩写</span><br></pre></td></tr></table></figure></li>
+<li><p>启动本地服务器</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo s        //hexo server的缩写</span><br></pre></td></tr></table></figure>
+<p>本地服务器启动完之后就如同上面验证主题一样，访问 <a href="http://localhost:4000/">http://localhost:4000</a> 来验证一下你写的文章预览效果。</p>
+</li>
+<li><p>部署网站<br>安装部署工具</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+<p>安装完毕后打开username下的<code>_config.yml</code>文件，翻到最底部找到<code>deploy</code>节点编辑如下：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: https://github.com/YoungerLi/youngerli.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>其中 <a href="https://github.com/YoungerLi/lihaojieM.github.io.git">https://github.com/YoungerLi/lihaojieM.github.io.git</a> 就是你GitHub中创建的仓库地址，在这复制即可。</p>
+</li>
+</ol>
+<p><img src="https://gitee.com/gitlihaojie/images/raw/master/img/20210324182408.png" alt="repository"></p>
+<p>&emsp;最后，部署网站</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo d        //hexo deploy的缩写</span><br></pre></td></tr></table></figure>
+<p>&emsp;第一次执行这一步的时候会让你输入你的GitHub的用户名及密码，输入正确无误后执行完毕，任何人就可以访问 <a href="https://lihaojiem.github.io/">https://lihaojiem.github.io</a> 进入你的博客了。</p>
+<p>&emsp;以后每次写完文章之后依次执行以下命令就可以发布更新了</p>
+<pre><code>    <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">$ hexo clean      // 清除缓存</span><br><span class="line">$ hexo g          // 生成静态网页文件</span><br><span class="line">$ hexo d          // 将本地博客发布到github</span><br></pre></td></tr></table></figure>
+</code></pre>
+]]></content>
+      <categories>
+        <category>博客</category>
+      </categories>
+      <tags>
+        <tag>Blog</tag>
+        <tag>工具</tag>
+        <tag>建站</tag>
+      </tags>
+  </entry>
+</search>

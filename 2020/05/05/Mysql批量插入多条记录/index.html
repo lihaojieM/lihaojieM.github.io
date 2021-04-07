@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="Mysql中一条Insert语句批量插入多条记录…">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Mysql】记一次Mysql批量插入多条记录">
+<meta property="og:url" content="http://example.com/2020/05/05/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="Key M">
+<meta property="og:description" content="Mysql中一条Insert语句批量插入多条记录…">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-05-05T01:36:23.000Z">
+<meta property="article:modified_time" content="2021-04-03T05:48:14.768Z">
+<meta property="article:author" content="Haojie Li">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2020/05/05/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>【Mysql】记一次Mysql批量插入多条记录 | Key M</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Key M</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Turn on, Tune in, Drop out</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5%E5%B8%B8%E7%94%A8%E5%86%99%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">插入语句常用写法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E6%9D%A1INSERT%E8%AF%AD%E5%8F%A5%E6%8F%92%E5%85%A5%E6%89%B9%E9%87%8F%E6%95%B0%E6%8D%AE%E7%9A%84%E5%86%99%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">一条INSERT语句插入批量数据的写法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">示例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BB%BA%E8%AE%AE"><span class="nav-number">4.</span> <span class="nav-text">建议</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Haojie Li"
+      src="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+  <p class="site-author-name" itemprop="name">Haojie Li</p>
+  <div class="site-description" itemprop="description">格 物 致 知</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:haojie.m@foxmail.com" title="E-Mail → mailto:haojie.m@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/user/home?id=298613578" title="Music163 → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;298613578" rel="noopener" target="_blank"><i class="fa fa-music fa-fw"></i>Music163</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gitlihaojie/images/raw/master/img/WeChat.jpg" title="WeChat → https:&#x2F;&#x2F;gitee.com&#x2F;gitlihaojie&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;WeChat.jpg" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i>WeChat</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://git-scm.com/" title="https:&#x2F;&#x2F;git-scm.com&#x2F;" rel="noopener" target="_blank">Git</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mvnrepository.com/" title="https:&#x2F;&#x2F;mvnrepository.com&#x2F;" rel="noopener" target="_blank">Maven Repository</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jetbrains.com/idea/" title="https:&#x2F;&#x2F;www.jetbrains.com&#x2F;idea&#x2F;" rel="noopener" target="_blank">IntelliJ IDEA</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" title="https:&#x2F;&#x2F;github.com&#x2F;judasn&#x2F;IntelliJ-IDEA-Tutorial" rel="noopener" target="_blank">IDEA-Tutorial</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dev.mysql.com/doc/refman/5.7/en/" title="https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;5.7&#x2F;en&#x2F;" rel="noopener" target="_blank">MySQL Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fontawesome.com.cn/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;" rel="noopener" target="_blank">Font Awesome</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iconfont.cn/" title="https:&#x2F;&#x2F;www.iconfont.cn&#x2F;" rel="noopener" target="_blank">iconfont</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.webfx.com/tools/emoji-cheat-sheet/" title="https:&#x2F;&#x2F;www.webfx.com&#x2F;tools&#x2F;emoji-cheat-sheet&#x2F;" rel="noopener" target="_blank">emoji</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.52pojie.cn/" title="https:&#x2F;&#x2F;www.52pojie.cn&#x2F;" rel="noopener" target="_blank">52PoJie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/next-theme/hexo-theme-next" title="https:&#x2F;&#x2F;github.com&#x2F;next-theme&#x2F;hexo-theme-next" rel="noopener" target="_blank">Next</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://theme-next.js.org/" title="https:&#x2F;&#x2F;theme-next.js.org&#x2F;" rel="noopener" target="_blank">Next Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/" title="https:&#x2F;&#x2F;hexo.io&#x2F;" rel="noopener" target="_blank">Hexo</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/docs/index.html" title="https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;index.html" rel="noopener" target="_blank">Hexo Docs</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/05/05/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+      <meta itemprop="name" content="Haojie Li">
+      <meta itemprop="description" content="格 物 致 知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Key M">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【Mysql】记一次Mysql批量插入多条记录
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-05-05 09:36:23" itemprop="dateCreated datePublished" datetime="2020-05-05T09:36:23+08:00">2020-05-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+	
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>751</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>Mysql中一条Insert语句批量插入多条记录…</p>
+</blockquote>
+<span id="more"></span>
+<h4 id="插入语句常用写法"><a href="#插入语句常用写法" class="headerlink" title="插入语句常用写法"></a>插入语句常用写法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO items(name,city,price,number,picture)  VALUES(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这种方式只能够一次插入一条数据，要想插入多条数据，就得多次调用此sql语句，意味着多次与数据库建立连接。但是这样一来，就会增加服务器的负荷，因为，执行每一次SQL服务器都要同样对SQL进行分析、优化等操作。幸好MySQL提供了另一种解决方案，就是使用一条INSERT语句来插入多条记录。这并不是标准的SQL语法，因此只能在MySQL中使用。</p>
+<h4 id="一条INSERT语句插入批量数据的写法"><a href="#一条INSERT语句插入批量数据的写法" class="headerlink" title="一条INSERT语句插入批量数据的写法"></a>一条INSERT语句插入批量数据的写法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">[表名]([列名],[列名]) </span><br><span class="line"> VALUES</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值])),</span><br><span class="line">([列值],[列值]));</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，和原来的常规INSERT语句的区别，仅仅是在VALUES 后面增加值的排列，每条记录之间用英文输入法状态下的逗号隔开，是不是so easy。</p>
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO </span><br><span class="line">items(name,city,price,number,picture) </span><br><span class="line">VALUES</span><br><span class="line">(&#39;耐克运动鞋&#39;,&#39;广州&#39;,500,1000,&#39;003.jpg&#39;),</span><br><span class="line">(&#39;耐克运动鞋2&#39;,&#39;广州2&#39;,500,1000,&#39;002.jpg&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>这样，就实现了一次性插入了2条数据。</p>
+<h4 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h4><p>在程序中，插入批量数据时，最好使用这种通过一条INSERT语句来一次性插入的方式。这样可以避免程序和数据库建立多次连接，从而增加服务器负荷。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/04/12/MySQL%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5/" rel="prev" title="【MySQL】MySQL语句大全及用法">
+                  <i class="fa fa-chevron-left"></i> 【MySQL】MySQL语句大全及用法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/16/%E9%B8%A1%E5%85%94%E5%90%8C%E7%AC%BC%E9%97%AE%E9%A2%98/" rel="next" title="【Java】鸡兔同笼问题">
+                  【Java】鸡兔同笼问题 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Haojie Li</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">68k</span>
+  </span>
+</div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("10/27/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+--><script defer src="/lib/three.js"></script><script defer src="/lib/sphere.js"></script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.5" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

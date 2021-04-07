@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="MyBatis 的真正强大之处在于它的映射语句，这也是它的魔力所在。由于它的映射语句异常强大，映射器的 XML 文件就显得相对简单。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【框架】Mybatis映射关系">
+<meta property="og:url" content="http://example.com/2021/01/03/mybatis%E5%85%B3%E8%81%94%E6%98%A0%E5%B0%84/index.html">
+<meta property="og:site_name" content="Key M">
+<meta property="og:description" content="MyBatis 的真正强大之处在于它的映射语句，这也是它的魔力所在。由于它的映射语句异常强大，映射器的 XML 文件就显得相对简单。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-03T11:26:12.000Z">
+<meta property="article:modified_time" content="2021-04-03T05:48:14.768Z">
+<meta property="article:author" content="Haojie Li">
+<meta property="article:tag" content="框架">
+<meta property="article:tag" content="数据库">
+<meta property="article:tag" content="Mybatis">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2021/01/03/mybatis%E5%85%B3%E8%81%94%E6%98%A0%E5%B0%84/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>【框架】Mybatis映射关系 | Key M</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Key M</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Turn on, Tune in, Drop out</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E3%80%81mybatis-%E4%B8%80%E5%AF%B9%E4%B8%80%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.</span> <span class="nav-text">一、mybatis 一对一映射关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%B8%80%E5%AF%B9%E4%B8%80%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.1.</span> <span class="nav-text">1.一对一映射关系</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link"><span class="nav-number">1.1.0.1.</span> <span class="nav-text"></span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E3%80%90%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90%E3%80%91"><span class="nav-number">1.2.</span> <span class="nav-text">2.【案例分析】</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E4%BB%A3%E7%A0%81%EF%BC%9AStudentMapper-xml"><span class="nav-number">1.2.0.1.</span> <span class="nav-text">映射文件代码：StudentMapper.xml</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E3%80%81mybatis-%E4%B8%80%E5%AF%B9%E5%A4%9A%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.</span> <span class="nav-text">二、mybatis 一对多映射关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%B8%80%E5%AF%B9%E5%A4%9A%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">2.1.</span> <span class="nav-text">1.一对多映射关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E3%80%90%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90%E3%80%91-1"><span class="nav-number">2.2.</span> <span class="nav-text">2.【案例分析】</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E4%BB%A3%E7%A0%81%EF%BC%9AOrdersMapper-xml"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">映射文件代码：OrdersMapper.xml</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%89%E3%80%81mybatis-%E5%A4%9A%E5%AF%B9%E5%A4%9A%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">三、mybatis 多对多映射关系</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%A4%9A%E5%AF%B9%E5%A4%9A%E6%98%A0%E5%B0%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.1.</span> <span class="nav-text">1.多对多映射关系</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E3%80%90%E6%A1%88%E4%BE%8B%E5%88%86%E6%9E%90%E3%80%91-2"><span class="nav-number">3.2.</span> <span class="nav-text">2.【案例分析】</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%E4%BB%A3%E7%A0%81%EF%BC%9AOrdersMapper-xml-1"><span class="nav-number">3.2.0.1.</span> <span class="nav-text">映射文件代码：OrdersMapper.xml</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Haojie Li"
+      src="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+  <p class="site-author-name" itemprop="name">Haojie Li</p>
+  <div class="site-description" itemprop="description">格 物 致 知</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:haojie.m@foxmail.com" title="E-Mail → mailto:haojie.m@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/user/home?id=298613578" title="Music163 → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;298613578" rel="noopener" target="_blank"><i class="fa fa-music fa-fw"></i>Music163</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gitlihaojie/images/raw/master/img/WeChat.jpg" title="WeChat → https:&#x2F;&#x2F;gitee.com&#x2F;gitlihaojie&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;WeChat.jpg" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i>WeChat</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://git-scm.com/" title="https:&#x2F;&#x2F;git-scm.com&#x2F;" rel="noopener" target="_blank">Git</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mvnrepository.com/" title="https:&#x2F;&#x2F;mvnrepository.com&#x2F;" rel="noopener" target="_blank">Maven Repository</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jetbrains.com/idea/" title="https:&#x2F;&#x2F;www.jetbrains.com&#x2F;idea&#x2F;" rel="noopener" target="_blank">IntelliJ IDEA</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" title="https:&#x2F;&#x2F;github.com&#x2F;judasn&#x2F;IntelliJ-IDEA-Tutorial" rel="noopener" target="_blank">IDEA-Tutorial</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dev.mysql.com/doc/refman/5.7/en/" title="https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;5.7&#x2F;en&#x2F;" rel="noopener" target="_blank">MySQL Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fontawesome.com.cn/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;" rel="noopener" target="_blank">Font Awesome</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iconfont.cn/" title="https:&#x2F;&#x2F;www.iconfont.cn&#x2F;" rel="noopener" target="_blank">iconfont</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.webfx.com/tools/emoji-cheat-sheet/" title="https:&#x2F;&#x2F;www.webfx.com&#x2F;tools&#x2F;emoji-cheat-sheet&#x2F;" rel="noopener" target="_blank">emoji</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.52pojie.cn/" title="https:&#x2F;&#x2F;www.52pojie.cn&#x2F;" rel="noopener" target="_blank">52PoJie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/next-theme/hexo-theme-next" title="https:&#x2F;&#x2F;github.com&#x2F;next-theme&#x2F;hexo-theme-next" rel="noopener" target="_blank">Next</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://theme-next.js.org/" title="https:&#x2F;&#x2F;theme-next.js.org&#x2F;" rel="noopener" target="_blank">Next Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/" title="https:&#x2F;&#x2F;hexo.io&#x2F;" rel="noopener" target="_blank">Hexo</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/docs/index.html" title="https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;index.html" rel="noopener" target="_blank">Hexo Docs</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/03/mybatis%E5%85%B3%E8%81%94%E6%98%A0%E5%B0%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+      <meta itemprop="name" content="Haojie Li">
+      <meta itemprop="description" content="格 物 致 知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Key M">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【框架】Mybatis映射关系
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2021-01-03 19:26:12" itemprop="dateCreated datePublished" datetime="2021-01-03T19:26:12+08:00">2021-01-03</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%A1%86%E6%9E%B6/Mybatis/" itemprop="url" rel="index"><span itemprop="name">Mybatis</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+	
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>6.5k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>11 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <blockquote>
+<p>MyBatis 的真正强大之处在于它的映射语句，这也是它的魔力所在。由于它的映射语句异常强大，映射器的 XML 文件就显得相对简单。</p>
+</blockquote>
+<span id="more"></span>
+<h3 id="一、mybatis-一对一映射关系"><a href="#一、mybatis-一对一映射关系" class="headerlink" title="一、mybatis 一对一映射关系"></a>一、mybatis 一对一映射关系</h3><h4 id="1-一对一映射关系"><a href="#1-一对一映射关系" class="headerlink" title="1.一对一映射关系"></a>1.一对一映射关系</h4><ul>
+<li>  什么是一对一映射关系？：从数据库的角度出发就是在任意一个表中引入另外一个表的主键作为外键。在本类的定义中定义另外一个类的对象。</li>
+<li>  在mybatis中，我们通过resultMap元素的子元素 association来进行处理。</li>
+<li>  association元素具有以下配置属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">属性名称</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">property</td>
+<td align="center">指定映射到的实体类对象属性，与表字段一一对应</td>
+</tr>
+<tr>
+<td align="center">column</td>
+<td align="center">指定表中对应的字段</td>
+</tr>
+<tr>
+<td align="center">select</td>
+<td align="center">指定引入嵌套查询的子SQL 语句，该属性用于关联映射中的嵌套查询。</td>
+</tr>
+<tr>
+<td align="center">javaType</td>
+<td align="center">指定映射到实体对象属性的类型</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>在mybatis中设定了两种查询方式：嵌套查询及嵌套结果查询方式</p>
+<h6 id=""><a href="#" class="headerlink" title=""></a></h6><pre><code>  &lt;!--方式一:嵌套查询--！〉
+  &lt;association property=&quot;card&quot; column=&quot;card_id&quot; javaType=&quot;com.itheima.po.ldCard&quot;
+  select=&quot;com.itheima.mapper.ldCardMapper.findCodeByld&quot; /&gt;
+
+  &lt;!--方式二:嵌套结果--！〉
+  &lt;association property=&quot;card&quot; javaType=&quot;com.itheima.po.ldCard&quot;&gt;
+      &lt;id property=&quot;id&quot; column=&quot;card_id&quot; /&gt;
+      &lt;result property=&quot;code&quot; column=&quot;code&quot; /&gt;
+  &lt;/association&gt;  
+</code></pre>
+</li>
+</ul>
+<h4 id="2-【案例分析】"><a href="#2-【案例分析】" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 个人和身份证之间是一对一的关系，以个人信息和个人身份证一对一关系为例，查询个人信息，通过一对一映射关系来获取对应身份证信息。<br><strong>【分析】：</strong> 根据mybatis框架我们可知，mybatis关系映射语句都是在Mapper.xml中书写的，在mybatis关系映射中，我们需要用到 resuletMap 元素，该元素的用法在上一篇文章中<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44989801/article/details/115079755">resultMap映射详解</a>进行过讲解，可自行查阅。StudentMapper.xml 的写法如下</p>
+<h6 id="映射文件代码：StudentMapper-xml"><a href="#映射文件代码：StudentMapper-xml" class="headerlink" title="映射文件代码：StudentMapper.xml"></a>映射文件代码：StudentMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!-- 3-5行是mybatis约束配置 --&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.StudentMapper&quot;&gt;
+    &lt;!-- 嵌套查询 
+    &lt;select id=&quot;querystudent&quot; parameterType=&quot;int&quot; resultMap=&quot;IdS&quot;&gt;
+        select * from student where id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;resultMap type=&quot;Student&quot; id=&quot;IdS&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;s_name&quot; column=&quot;s_name&quot;/&gt;
+        &lt;result property=&quot;s_age&quot; column=&quot;s_age&quot;/&gt;
+        &lt;result property=&quot;s_sex&quot; column=&quot;s_sex&quot;/&gt;
+        &lt;association property=&quot;card_id&quot; column=&quot;card_id&quot; javaType=&quot;Idcard&quot;
+            select=&quot;org.mybatis.mapper.IdcardMapper.queryinfo&quot;&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+    --&gt;
+    &lt;!--  嵌套结果--&gt;
+    &lt;select id=&quot;querystudent&quot; resultMap=&quot;Ids&quot;&gt;     &lt;!-- select语句的返回值是resultMap类型--&gt;
+        &lt;!-- sql查询语句， 当p.card_id = idcard.id时，获取student表中所有数据和idcard表中的code数据--&gt;
+        select p.*,idcard.code 
+        from student p,idcard idcard
+        where p.card_id = idcard.id
+    &lt;/select&gt;
+        &lt;!-- 一对一映射需要使用resultMap元素封装查询到的信息，id值需要与上文select语句中引用的resultMap=&quot;Ins&quot;值相同---&gt;
+    &lt;resultMap type=&quot;Student&quot; id=&quot;Ids&quot;&gt;
+    &lt;!--映射 Student类中属性与student表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;s_name&quot; column=&quot;s_name&quot;/&gt;
+        &lt;result property=&quot;s_age&quot; column=&quot;s_age&quot;/&gt;
+        &lt;result property=&quot;s_sex&quot; column=&quot;s_sex&quot;/&gt;
+        &lt;!--映射 Idcard类中属性与idcard表的字段一一对应,并将数据放入Student类的属性card_id中--&gt;
+        &lt;association property=&quot;card_id&quot; javaType=&quot;Idcard&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;card_id&quot;/&gt;
+            &lt;result property=&quot;code&quot; column=&quot;code&quot;/&gt;
+        &lt;/association&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="二、mybatis-一对多映射关系"><a href="#二、mybatis-一对多映射关系" class="headerlink" title="二、mybatis 一对多映射关系"></a>二、mybatis 一对多映射关系</h3><h4 id="1-一对多映射关系"><a href="#1-一对多映射关系" class="headerlink" title="1.一对多映射关系"></a>1.一对多映射关系</h4><ul>
+<li>什么是一对多关系：一对多关系就是表A中一条数据对应表B中的多条数据，例如，用户和订单之间的关系，一个用户可以有多个订单信息。</li>
+<li>在mybatis中，我们通过resultMap元素的子元素 collection来进行处理。</li>
+<li>collection元素具有以下配置属性</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">属性名称</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">property</td>
+<td align="center">指定映射到的实体类对象属性，与表字段一一对应</td>
+</tr>
+<tr>
+<td align="center">column</td>
+<td align="center">指定表中对应的字段</td>
+</tr>
+<tr>
+<td align="center">select</td>
+<td align="center">指定引入嵌套查询的子SQL 语句，该属性用于关联映射中的嵌套查询。</td>
+</tr>
+<tr>
+<td align="center">javaType</td>
+<td align="center">指定映射到实体对象属性的类型</td>
+</tr>
+<tr>
+<td align="center">ofType</td>
+<td align="center">ofType 属性与javaType 属性对应，它用于指定实体对象中集合类属性所包含的元素类型。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<ul>
+<li>  需要注意的是：在一对多映射和多对多映射中，collection 元素属行中使用的是ofType属性来指定实体对象，而不是使用JavaType属性。</li>
+</ul>
+</blockquote>
+<h4 id="2-【案例分析】-1"><a href="#2-【案例分析】-1" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 以用户和订单为例，若一个用户有用三个订单，则如何通过查询用户来获取用户对应的订单信息。<br><strong>【分析】：</strong> 一个用户可以有多个订单信息。这就构成了一对多的映射关系。通过mybatis中的一对多映射关系，在mapper.xml文件中写入对应语句后则可完成该需求。</p>
+<h6 id="映射文件代码：OrdersMapper-xml"><a href="#映射文件代码：OrdersMapper-xml" class="headerlink" title="映射文件代码：OrdersMapper.xml"></a>映射文件代码：OrdersMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;!--a.一对多嵌套结果  --&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.UserMapper&quot;&gt;
+    &lt;select id=&quot;queryorders&quot; parameterType=&quot;int&quot; resultMap=&quot;Ins&quot;&gt;        &lt;!-- select语句的返回值是resultMap类型--&gt;
+        &lt;!-- sql查询语句， 当u.id = o.user_id, u.id=&quot;传入值&quot;时，获取user 表中id=&quot;传入值&quot;的数据以及orders 表中的订单数据--&gt;
+        select u.*,o.id as orders_id,o.number
+        from user u,orders o
+        where u.id = o.user_id
+        and u.id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;!-- 一对多映射需要使用resultMap元素封装查询到的信息，且id值需要与上文select语句中引用的resultMap=&quot;Ins&quot;值相同--&gt;
+    &lt;resultMap type=&quot;org.mybatis.beans.User&quot; id=&quot;Ins&quot;&gt;
+        &lt;!--映射 User类中属性与user表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;username&quot; column=&quot;username&quot;/&gt;
+        &lt;result property=&quot;address&quot; column=&quot;address&quot;/&gt;
+          &lt;!--  a.1对多关联映射: collection  
+            ofType 表示属性集合中元素的类型， List&lt;Orders&gt;属性即 Orders 类--&gt;
+        &lt;collection property=&quot;orderList&quot; ofType=&quot;org.mybatis.beans.Orders&quot;&gt;
+        &lt;!--映射 Orders类中属性与orders表的字段一一对应--&gt;
+        &lt;id property=&quot;id&quot; column=&quot;orders_id&quot;/&gt;
+        &lt;result property=&quot;number&quot; column=&quot;number&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+<h3 id="三、mybatis-多对多映射关系"><a href="#三、mybatis-多对多映射关系" class="headerlink" title="三、mybatis 多对多映射关系"></a>三、mybatis 多对多映射关系</h3><h4 id="1-多对多映射关系"><a href="#1-多对多映射关系" class="headerlink" title="1.多对多映射关系"></a>1.多对多映射关系</h4><ul>
+<li>  <strong>什么是多对多关系：</strong> 一对多关系就是表A中一条数据对应表B中的多条数据，例如，用户和订单之间的关系，一个用户可以有多个订单信息。</li>
+<li>  在mybatis中，与一对多映射一致，我们通过resultMap元素的子元素 collection来进行处理。这里就不再多collection元素属性与上文一致。</li>
+<li><blockquote>
+<ul>
+<li>需要注意的是：在一对多映射和多对多映射中，collection 元素属行中使用的是ofType属性来指定实体对象，而不是使用JavaType属性。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<h4 id="2-【案例分析】-2"><a href="#2-【案例分析】-2" class="headerlink" title="2.【案例分析】"></a>2.【案例分析】</h4><p><strong>案例描述：</strong> 以订单和商品为例，若一个订单有用三个商品，一个商品有五个不同的订单，则如何通过查询订单来获取对应的商品信息，如何通过查询商品来获取对应的订单信息。<br><strong>【分析】：</strong> 一个商品可以有多个订单信息。一个订单可以有多个商品信息。这就构成了多对多的映射关系。一般来说，<strong>在多对多的映射中，会通过生成中间表的方式来处理</strong>，通过一个中间表保存订单信息和商品信息。但Mapper.xml中的resultMap 元素的写法与一对多基本一致。</p>
+<h6 id="映射文件代码：OrdersMapper-xml-1"><a href="#映射文件代码：OrdersMapper-xml-1" class="headerlink" title="映射文件代码：OrdersMapper.xml"></a>映射文件代码：OrdersMapper.xml</h6><pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper
+PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;
+&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;org.mybatis.mapper.OrdersMapper&quot;&gt;
+&lt;!-- 多对多嵌套结果     --&gt;
+    &lt;select id=&quot;queryproduct&quot; parameterType=&quot;int&quot; resultMap=&quot;Ins&quot;&gt;
+        select o.*,p.id as pid,p.name,p.price
+        from orders o,product p,ordersitem oi
+        where oi.orders_id=o.id
+        and oi.product_id=p.id
+        and o.id=#&#123;id&#125;
+    &lt;/select&gt;
+    &lt;resultMap type=&quot;Orders&quot; id=&quot;Ins&quot;&gt;
+        &lt;id property=&quot;id&quot; column=&quot;id&quot;/&gt;
+        &lt;result property=&quot;number&quot; column=&quot;number&quot;/&gt;
+        &lt;collection property=&quot;productList&quot; ofType=&quot;Product&quot;&gt;
+            &lt;id property=&quot;id&quot; column=&quot;pid&quot;/&gt;
+            &lt;result property=&quot;name&quot; column=&quot;name&quot;/&gt;
+            &lt;result property=&quot;price&quot; column=&quot;price&quot;/&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+&lt;/mapper&gt;
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%A1%86%E6%9E%B6/" rel="tag"><i class="fa fa-tag"></i> 框架</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+              <a href="/tags/Mybatis/" rel="tag"><i class="fa fa-tag"></i> Mybatis</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/11/15/String%20%E6%96%B9%E6%B3%95%E6%B1%87%E6%80%BB/" rel="prev" title="【Java】String 方法汇总">
+                  <i class="fa fa-chevron-left"></i> 【Java】String 方法汇总
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2021/01/13/EasyExcel/" rel="next" title="【框架】EasyExcel">
+                  【框架】EasyExcel <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Haojie Li</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">68k</span>
+  </span>
+</div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("10/27/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+--><script defer src="/lib/three.js"></script><script defer src="/lib/sphere.js"></script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.5" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css">
+
+<script class="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","images":"/images","scheme":"Gemini","version":"8.2.2","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
+  </script>
+<meta name="description" content="mysql语句大全及用法。MySQL数据库是一个十分轻便的数据库管理系统，相比大型的数据库管理系统如Oracle、MS-SQL ，MySQL更拥有轻便、灵活、开发速度快的特色，更适用于中小型数据的存储与架构。MySQL之所以能够被数以万计的网站采用，也是由此而来。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【MySQL】MySQL语句大全及用法">
+<meta property="og:url" content="http://example.com/2020/04/12/MySQL%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5/index.html">
+<meta property="og:site_name" content="Key M">
+<meta property="og:description" content="mysql语句大全及用法。MySQL数据库是一个十分轻便的数据库管理系统，相比大型的数据库管理系统如Oracle、MS-SQL ，MySQL更拥有轻便、灵活、开发速度快的特色，更适用于中小型数据的存储与架构。MySQL之所以能够被数以万计的网站采用，也是由此而来。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-12T09:38:23.000Z">
+<meta property="article:modified_time" content="2021-04-03T05:48:14.768Z">
+<meta property="article:author" content="Haojie Li">
+<meta property="article:tag" content="MySQL">
+<meta property="article:tag" content="数据库">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2020/04/12/MySQL%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5/">
+
+
+<script class="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+<title>【MySQL】MySQL语句大全及用法 | Key M</title>
+  
+
+
+
+
+  <noscript>
+  <style>
+  body { margin-top: 2rem; }
+
+  .use-motion .menu-item,
+  .use-motion .sidebar,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header {
+    visibility: visible;
+  }
+
+  .use-motion .header,
+  .use-motion .site-brand-container .toggle,
+  .use-motion .footer { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle,
+  .use-motion .custom-logo-image {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line {
+    transform: scaleX(1);
+  }
+
+  .search-pop-overlay, .sidebar-nav { display: none; }
+  .sidebar-panel { display: block; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <h1 class="site-title">Key M</h1>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Turn on, Tune in, Drop out</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+        <li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Haojie Li"
+      src="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+  <p class="site-author-name" itemprop="name">Haojie Li</p>
+  <div class="site-description" itemprop="description">格 物 致 知</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">文章</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">33</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:haojie.m@foxmail.com" title="E-Mail → mailto:haojie.m@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://music.163.com/#/user/home?id=298613578" title="Music163 → https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;298613578" rel="noopener" target="_blank"><i class="fa fa-music fa-fw"></i>Music163</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://gitee.com/gitlihaojie/images/raw/master/img/WeChat.jpg" title="WeChat → https:&#x2F;&#x2F;gitee.com&#x2F;gitlihaojie&#x2F;images&#x2F;raw&#x2F;master&#x2F;img&#x2F;WeChat.jpg" rel="noopener" target="_blank"><i class="fab fa-weixin fa-fw"></i>WeChat</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll site-overview-item animated">
+    <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://git-scm.com/" title="https:&#x2F;&#x2F;git-scm.com&#x2F;" rel="noopener" target="_blank">Git</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://mvnrepository.com/" title="https:&#x2F;&#x2F;mvnrepository.com&#x2F;" rel="noopener" target="_blank">Maven Repository</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.jetbrains.com/idea/" title="https:&#x2F;&#x2F;www.jetbrains.com&#x2F;idea&#x2F;" rel="noopener" target="_blank">IntelliJ IDEA</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/judasn/IntelliJ-IDEA-Tutorial" title="https:&#x2F;&#x2F;github.com&#x2F;judasn&#x2F;IntelliJ-IDEA-Tutorial" rel="noopener" target="_blank">IDEA-Tutorial</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://dev.mysql.com/doc/refman/5.7/en/" title="https:&#x2F;&#x2F;dev.mysql.com&#x2F;doc&#x2F;refman&#x2F;5.7&#x2F;en&#x2F;" rel="noopener" target="_blank">MySQL Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="http://www.fontawesome.com.cn/" title="http:&#x2F;&#x2F;www.fontawesome.com.cn&#x2F;" rel="noopener" target="_blank">Font Awesome</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.iconfont.cn/" title="https:&#x2F;&#x2F;www.iconfont.cn&#x2F;" rel="noopener" target="_blank">iconfont</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.webfx.com/tools/emoji-cheat-sheet/" title="https:&#x2F;&#x2F;www.webfx.com&#x2F;tools&#x2F;emoji-cheat-sheet&#x2F;" rel="noopener" target="_blank">emoji</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://www.52pojie.cn/" title="https:&#x2F;&#x2F;www.52pojie.cn&#x2F;" rel="noopener" target="_blank">52PoJie</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://github.com/next-theme/hexo-theme-next" title="https:&#x2F;&#x2F;github.com&#x2F;next-theme&#x2F;hexo-theme-next" rel="noopener" target="_blank">Next</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://theme-next.js.org/" title="https:&#x2F;&#x2F;theme-next.js.org&#x2F;" rel="noopener" target="_blank">Next Docs</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/" title="https:&#x2F;&#x2F;hexo.io&#x2F;" rel="noopener" target="_blank">Hexo</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://hexo.io/docs/index.html" title="https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;index.html" rel="noopener" target="_blank">Hexo Docs</a>
+        </li>
+    </ul>
+  </div>
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/04/12/MySQL%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://gitee.com/gitlihaojie/images/raw/master/img/goat1.png">
+      <meta itemprop="name" content="Haojie Li">
+      <meta itemprop="description" content="格 物 致 知">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Key M">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          【MySQL】MySQL语句大全及用法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2020-04-12 17:38:23" itemprop="dateCreated datePublished" datetime="2020-04-12T17:38:23+08:00">2020-04-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">后端</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%95%B0%E6%8D%AE%E5%BA%93/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E5%90%8E%E7%AB%AF/%E6%95%B0%E6%8D%AE%E5%BA%93/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a>
+        </span>
+    </span>
+
+  
+      </div>
+      <div class="post-meta">
+	
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>4.6k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>8 分钟</span>
+    </span>
+</div>
+
+            <div class="post-description">mysql语句大全及用法。MySQL数据库是一个十分轻便的数据库管理系统，相比大型的数据库管理系统如Oracle、MS-SQL ，MySQL更拥有轻便、灵活、开发速度快的特色，更适用于中小型数据的存储与架构。MySQL之所以能够被数以万计的网站采用，也是由此而来。</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>零、用户管理：</p>
+<p>1、新建用户：</p>
+<blockquote>
+<p>CREATE USER name IDENTIFIED BY ‘ssapdrow’;</p>
+</blockquote>
+<p>2、更改密码：</p>
+<blockquote>
+<p>SET PASSWORD FOR name=PASSWORD(‘fdddfd’);</p>
+</blockquote>
+<p>3、权限管理</p>
+<blockquote>
+<p>SHOW GRANTS FOR name; //查看name用户权限</p>
+</blockquote>
+<blockquote>
+<p>GRANT SELECT ON db_name.* TO name; //给name用户db_name数据库的所有权限</p>
+</blockquote>
+<blockquote>
+<p>REVOKE SELECT ON db_name.* TO name; //GRANT的反操作，去除权限；</p>
+</blockquote>
+<p>一、数据库操作：</p>
+<p>1、查看数据库：</p>
+<blockquote>
+<p>SHOW DATABASES;</p>
+</blockquote>
+<p>2、创建数据库：</p>
+<blockquote>
+<p>CREATE DATABASE db_name; //db_name为数据库名</p>
+</blockquote>
+<p>3、使用数据库：</p>
+<blockquote>
+<p>USE db_name;</p>
+</blockquote>
+<p>4、删除数据库：</p>
+<blockquote>
+<p>DROP DATABASE db_name;</p>
+</blockquote>
+<p>二、创建表：</p>
+<p>1、创建表：</p>
+<blockquote>
+<p>CREATE TABLE table_name(</p>
+</blockquote>
+<blockquote>
+<p>id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT, //id值，无符号、非空、递增——唯一性，可做主键。</p>
+</blockquote>
+<blockquote>
+<p>name VARCHAR(60) NOT NULL</p>
+</blockquote>
+<blockquote>
+<p>score TINYINT UNSIGNED NOT NULL DEFAULT 0, //设置默认列值</p>
+</blockquote>
+<blockquote>
+<p>PRIMARY KEY(id)</p>
+</blockquote>
+<blockquote>
+<p>)ENGINE=InnoDB //设置表的存储引擎，一般常用InnoDB和MyISAM；InnoDB可靠，支持事务；MyISAM高效不支持全文检索</p>
+</blockquote>
+<blockquote>
+<p>DEFAULT charset=utf8; //设置默认的编码，防止数据库中文乱码</p>
+</blockquote>
+<p>如果有条件的创建数据表还可以使用 &gt;CREATE TABLE IF NOT EXISTS tb_name(……..</p>
+<p>2、复制表：</p>
+<blockquote>
+<p>CREATE TABLE tb_name2 SELECT * FROM tb_name;</p>
+</blockquote>
+<p>或者部分复制：</p>
+<blockquote>
+<p>CREATE TABLE tb_name2 SELECT id,name FROM tb_name;</p>
+</blockquote>
+<p>3、创建临时表：</p>
+<blockquote>
+<p>CREATE TEMPORARY TABLE tb_name(这里和创建普通表一样);</p>
+</blockquote>
+<p>4、查看数据库中可用的表：</p>
+<blockquote>
+<p>SHOW TABLES;</p>
+</blockquote>
+<p>5、查看表的结构：</p>
+<blockquote>
+<p>DESCRIBE tb_name;</p>
+</blockquote>
+<p>也可以使用：</p>
+<blockquote>
+<p>SHOW COLUMNS in tb_name; //from也可以</p>
+</blockquote>
+<p>6、删除表：</p>
+<blockquote>
+<p>DROP [ TEMPORARY ] TABLE [ IF EXISTS ] tb_name[ ,tb_name2…….];</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>DROP TABLE IF EXISTS tb_name;</p>
+</blockquote>
+<p>7、表重命名：</p>
+<blockquote>
+<p>RENAME TABLE name_old TO name_new;</p>
+</blockquote>
+<p>还可以使用：</p>
+<blockquote>
+<p>ALTER TABLE name_old RENAME name_new;</p>
+</blockquote>
+<p>三、修改表：</p>
+<p>1、更改表结构：</p>
+<blockquote>
+<p>ALTER TABLE tb_name ADD[CHANGE,RENAME,DROP] …要更改的内容…</p>
+</blockquote>
+<p>实例：</p>
+<blockquote>
+<p>ALTER TABLE tb_name ADD COLUMN address varchar(80) NOT NULL;</p>
+</blockquote>
+<blockquote>
+<p>ALTER TABLE tb_name DROP address;</p>
+</blockquote>
+<blockquote>
+<p>ALTER TABLE tb_name CHANGE score score SMALLINT(4) NOT NULL;</p>
+</blockquote>
+<p>四、插入数据：</p>
+<p>1、插入数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(id,name,score)VALUES(NULL,’张三’,140),(NULL,’张四’,178),(NULL,’张五’,134);</p>
+</blockquote>
+<p>这里的插入多条数据直接在后边加上逗号，直接写入插入的数据即可；主键id是自增的列，可以不用写。</p>
+<p>2、插入检索出来的数据：</p>
+<blockquote>
+<p>INSERT INTO tb_name(name,score) SELECT name,score FROM tb_name2;</p>
+</blockquote>
+<p>五、更新数据：</p>
+<p>1、指定更新数据：</p>
+<blockquote>
+<p>UPDATE tb_name SET score=189 WHERE id=2;</p>
+</blockquote>
+<blockquote>
+<p>UPDATE tablename SET columnName=NewValue [ WHERE condition ]</p>
+</blockquote>
+<p>六、删除数据：</p>
+<p>1、删除数据：</p>
+<blockquote>
+<p>DELETE FROM tb_name WHERE id=3;</p>
+</blockquote>
+<p>七、条件控制：</p>
+<p>1、WHERE 语句：</p>
+<blockquote>
+<p>SELECT * FROM tb_name WHERE id=3;</p>
+</blockquote>
+<p>2、HAVING 语句：</p>
+<blockquote>
+<p>SELECT * FROM tb_name GROUP BY score HAVING count(*)&gt;2</p>
+</blockquote>
+<p>3、相关条件控制符：</p>
+<p>=、&gt;、</p>
+<p>AND 、OR</p>
+<p>Linke()用法中 % 为匹配任意、 _ 匹配一个字符（可以是汉字）</p>
+<p>IS NULL 空值检测</p>
+<p>八、MySQL的正则表达式：</p>
+<p>1、Mysql支持REGEXP的正则表达式：</p>
+<blockquote>
+<p>SELECT * FROM tb_name WHERE name REGEXP ‘^[A-D]’ //找出以A-D 为开头的name</p>
+</blockquote>
+<p>2、特殊字符需要转义。</p>
+<p>九、MySQL的一些函数：</p>
+<p>1、字符串链接——CONCAT()</p>
+<blockquote>
+<p>SELECT CONCAT(name,’=&gt;’,score) FROM tb_name</p>
+</blockquote>
+<p>2、数学函数：</p>
+<p>AVG、SUM、MAX、MIN、COUNT；</p>
+<p>3、文本处理函数：</p>
+<p>TRIM、LOCATE、UPPER、LOWER、SUBSTRING</p>
+<p>4、运算符：</p>
+<p>+、-、*、\</p>
+<p>5、时间函数：</p>
+<p>DATE()、CURTIME()、DAY()、YEAR()、NOW()…..</p>
+<p>十、分组查询：</p>
+<p>1、分组查询可以按照指定的列进行分组：</p>
+<blockquote>
+<p>SELECT COUNT(<em>) FROM tb_name GROUP BY score HAVING COUNT(</em>)&gt;1;</p>
+</blockquote>
+<p>2、条件使用Having；</p>
+<p>3、ORDER BY 排序：</p>
+<p>ORDER BY DESC|ASC =&gt;按数据的降序和升序排列</p>
+<p>十一、UNION规则——可以执行两个语句（可以去除重复行）</p>
+<p>十二、全文检索——MATCH和AGAINST</p>
+<p>1、SELECT MATCH(note_text)AGAINST(‘PICASO’) FROM tb_name;</p>
+<p>2、InnoDB引擎不支持全文检索，MyISAM可以；</p>
+<p>十三、视图</p>
+<p>1、创建视图</p>
+<blockquote>
+<p>CREATE VIEW name AS SELECT * FROM tb_name WHERE ~~ ORDER BY ~~;</p>
+</blockquote>
+<p>2、视图的特殊作用：</p>
+<p>a、简化表之间的联结（把联结写在select中）；</p>
+<p>b、重新格式化输出检索的数据（TRIM，CONCAT等函数）；</p>
+<p>c、过滤不想要的数据（select部分）</p>
+<p>d、使用视图计算字段值，如汇总这样的值。</p>
+<p>十四、使用存储过程：</p>
+<p>个人理解，存储过程就是一个自定义函数，有局部变量参数，可传入参数，可以返回值，不过这语法够呆滞的~~~</p>
+<p>1、创建存储过程：</p>
+<blockquote>
+<p>CREATE PROCEDURE pro(</p>
+</blockquote>
+<blockquote>
+<p>IN num INT,OUT total INT)</p>
+</blockquote>
+<blockquote>
+<p>BEGIN</p>
+</blockquote>
+<blockquote>
+<p>SELECT SUM(score) INTO total FROM tb_name WHERE id=num;</p>
+</blockquote>
+<blockquote>
+<p>END;</p>
+</blockquote>
+<p>***这里的 IN (传递一个值给存储过程)，OUT（从存储过程传出一个值），INOUT（对存储过程传入、传出），INTO（保存变量）</p>
+<p>2、调用存储过程：</p>
+<blockquote>
+<p>CALL pro(13,@total) //这里的存储过程两个变量，一个是IN一个是OUT，这里的OUT也是需要写上的，不写会出错</p>
+</blockquote>
+<blockquote>
+<p>SELECT @total //这里就可以看到结果了；</p>
+</blockquote>
+<p>3、存储过程的其他操作：</p>
+<blockquote>
+<p>SHOW PROCEDURE STATUS; //显示当期的存储过程</p>
+</blockquote>
+<blockquote>
+<p>DROP PROCEDURE pro; //删除指定存储过程</p>
+</blockquote>
+<p>十五、使用游标：</p>
+<p>对这个理解不是很懂，朋友多多指点哦~~~</p>
+<p>1、游标的操作</p>
+<blockquote>
+<p>CREATE PROCEDURE pro()</p>
+</blockquote>
+<blockquote>
+<p>BEGIN</p>
+</blockquote>
+<blockquote>
+<p>DECLARE ordername CURSOR FOR</p>
+</blockquote>
+<blockquote>
+<p>SELECT order_num FROM orders;</p>
+</blockquote>
+<blockquote>
+<p>END;</p>
+</blockquote>
+<blockquote>
+<p>OPEN ordername; //打开游标</p>
+</blockquote>
+<blockquote>
+<p>CLOSE ordername; //关闭游标</p>
+</blockquote>
+<p>十六、触发器：</p>
+<p>触发器是指在进行某项指定操作时，触发触发器内指定的操作；</p>
+<p>1、支持触发器的语句有DELETE、INSERT、UPDATE,其他均不支持</p>
+<p>2、创建触发器：</p>
+<blockquote>
+<p>CREATE TRIGGER trig AFTER INSERT ON ORDERS FOR EACH ROW SELECT NEW.orser_name;</p>
+</blockquote>
+<blockquote>
+<p>INSERT语句，触发语句，返回一个值</p>
+</blockquote>
+<p>3、删除触发器</p>
+<blockquote>
+<p>DROP TRIGGER trig;</p>
+</blockquote>
+<p>十七、语法整理：</p>
+<p>1、ALTER TABLE（修改表）</p>
+<p>ALTER TABLE table_name</p>
+<p>( ADD column datatype [ NULL | NOT NULL ] [ CONSTRAINTS ]</p>
+<p>CHANGE column datatype COLUMNS [ NULL | NOT NULL ] [ CONSTRAINTS ]</p>
+<p>DROP column，</p>
+<p>。。。。</p>
+<p>2、COMMIT(处理事务)</p>
+<blockquote>
+<p>COMMIT;</p>
+</blockquote>
+<p>3、CREATE INDEX(在一个或多个列上创建索引)</p>
+<p>CREATE INDEX index_name ON tb_name (column [ ASC | DESC ] , …….);</p>
+<p>4、CREATE PROCEDURE (创建存储过程)</p>
+<p>CREATE PROCEDURE pro([ parameters ])</p>
+<p>BEGIN</p>
+<p>……..</p>
+<p>END</p>
+<p>5、CREATE TABLE(创建表)</p>
+<p>CREATE TABLE tb_name(</p>
+<p>column_name datetype [ NULL | NOT NULL ] [ condtraints] ,</p>
+<p>column_name datetype [ NULL | NOT NULL ] [ condtraints] ,</p>
+<p>…….</p>
+<p>PRIMARY KEY( column_name )</p>
+<p>)ENGINE=[ InnoDB | MyiSAM ]DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;</p>
+<p>6、CREATE USER(创建用户)</p>
+<p>CREATE USER user_name [ @hostname ] [ IDENTIFIED BY [ PASSWORD ] ‘pass_word’ ];</p>
+<p>7、CREATE VIEW （在一个或多个表上创建视图）</p>
+<p>CREATE [ OR REPLACE ] VIEW view_name AS SELECT。。。。。。</p>
+<p>8、DELETE (从表中删除一行或多行)</p>
+<p>DELETE FROM table_name [WHERE ……]</p>
+<p>9、DROP(永久删除数据库及对象，如视图、索引等)</p>
+<p>DROP DATEBASE | INDEX | PROCEDURE | TABLE | TRIGGER | USER | VIEW name</p>
+<p>10、INSERT （给表添加行）</p>
+<p>INSERT INTO tb_name [ ( columns,…… ) ] VALUES(value1,…………);</p>
+<p>使用SELECT值插入：</p>
+<p>INSERT INTO tb_name [ ( columns,…… ) ]</p>
+<p>SELECT columns , ……. FROM tb_name [ WHERE …… ] ;</p>
+<p>11、ROLLBACK（撤销一个事务处理块）</p>
+<p>ROLLBACK [ TO savapointname ];</p>
+<p>12、SAVEPOINT(为ROLLBACK设置保留点)</p>
+<p>SAVEPOINT sp1;</p>
+<p>13、SELECT (检索数据，显示信息)</p>
+<p>SELECT column_name,…..FROM tb_name [ WHERE ] [ UNION ] [ RROUP BY ] [ HAVING ] [ ORDER BY ]</p>
+<p>14、START TRANSACTION (一个新的事务处理块的开始)</p>
+<p>START TRANSACTION</p>
+<p>15、UPDATE(更新一个表中的一行或多行)</p>
+<p>UPDATE tb_name SET column=value,……[ where ]</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"><i class="fa fa-tag"></i> MySQL</a>
+              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/02/25/PicGo%20+%20%E7%A0%81%E4%BA%91%EF%BC%88Gitee%EF%BC%89%E5%9B%BE%E5%BA%8A%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="prev" title="【图床】使用PicGo + 码云（Gitee）完成图床环境搭建">
+                  <i class="fa fa-chevron-left"></i> 【图床】使用PicGo + 码云（Gitee）完成图床环境搭建
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/05/Mysql%E6%89%B9%E9%87%8F%E6%8F%92%E5%85%A5%E5%A4%9A%E6%9D%A1%E8%AE%B0%E5%BD%95/" rel="next" title="【Mysql】记一次Mysql批量插入多条记录">
+                  【Mysql】记一次Mysql批量插入多条记录 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      const activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      const commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2019 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Haojie Li</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">68k</span>
+  </span>
+</div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("10/27/2019 13:14:21");//此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 " + hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+    }
+setInterval("createtime()",250);
+</script>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+<!--
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+--><script defer src="/lib/three.js"></script><script defer src="/lib/sphere.js"></script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.5" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js"></script>
+<script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/bookmark.js"></script>
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
